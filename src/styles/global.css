@@ -1,1 +1,6 @@
 @import "tailwindcss";
+
+@theme {
+    --font-shippori-antique-b1: 'Shippori Antique B1', sans-serif;
+    --font-dm-mono: 'DM Mono', monospace;
+}

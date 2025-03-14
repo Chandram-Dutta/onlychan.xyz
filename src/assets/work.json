@@ -1,0 +1,47 @@
+[
+    {
+        "title": "Adora Inc.",
+        "designation": "Software Engineering Intern",
+        "date": "January 2025 - Present",
+        "location": "Remote",
+        "description": "Working with the amazing team again to build an amazing parental control app.",
+        "skills": "Flutter, Dart, Swift, Firebase, Typescript, GCP",
+        "links": [
+            {
+                "url": "https://www.adora-app.com/",
+                "title": "Adora",
+                "icon": "https://img.icons8.com/ios/50/domain--v1.png"
+            }
+        ]
+    },
+    {
+        "title": "Adora Inc.",
+        "designation": "Software Engineering Intern",
+        "date": "February 2024 - July 2024",
+        "location": "Remote",
+        "description": "Worked on the Adora Child and Parent App. Developed UIs and features using Flutter & Dart with localization support. Analysed & Fixed Bugs using Firebase Crashlytics.",
+        "skills": "Flutter, Dart, Swift, Firebase, Typescript, GCP",
+        "links": [
+            {
+                "url": "https://www.adora-app.com/",
+                "title": "Adora",
+                "icon": "https://img.icons8.com/ios/50/domain--v1.png"
+            }
+        ]
+    },
+    {
+        "title": "Ioninks",
+        "designation": "Freelance Flutter Developer",
+        "date": "June 2022 - December 2023",
+        "location": "Remote",
+        "description": "Developed Garuda Exams as the only developer on the team within a span of 3 months. Started work on 3 more applications for clients.",
+        "skills": "Flutter, Dart, Firebase",
+        "links": [
+            {
+                "url": "https://play.google.com/store/apps/details?id=in.garudaexams.garudaexams",
+                "title": "Play Store",
+                "icon": "https://img.icons8.com/ios/50/google-play--v1.png"
+            }
+        ]
+    }
+]

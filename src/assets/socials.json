@@ -1,0 +1,44 @@
+[
+    {
+        "social": "Mail",
+        "link": "mailto:chandramdutta2004@gmail.com",
+        "icon": "icons/mail.svg",
+        "title": "chandramdutta2004@gmail.com"
+    },
+    {
+        "social": "Google Scholar",
+        "link": "https://links.onlychan.xyz/gscholar",
+        "icon": "icons/google-scholar.svg",
+        "title": "Chandram Dutta"
+    },
+    {
+        "social": "GitHub",
+        "link": "https://links.onlychan.xyz/github",
+        "icon": "icons/github.svg",
+        "title": "@Chandram-Dutta"
+    },
+    {
+        "social": "X",
+        "link": "https://links.onlychan.xyz/x",
+        "icon": "icons/x.svg",
+        "title": "@ChandramDutta"
+    },
+    {
+        "social": "LinkedIn",
+        "link": "https://links.onlychan.xyz/linkedin",
+        "icon": "icons/linkedin.svg",
+        "title": "@chandramdutta"
+    },
+    {
+        "social": "Instagram",
+        "link": "https://links.onlychan.xyz/instagram",
+        "icon": "icons/instagram.svg",
+        "title": "@chandram.dutta"
+    },
+    {
+        "social": "BeReal",
+        "link": "https://links.onlychan.xyz/bereal",
+        "icon": "icons/bereal.svg",
+        "title": "@chandramdutta"
+    }
+]

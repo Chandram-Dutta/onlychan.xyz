@@ -1,0 +1,135 @@
+[
+    {
+        "title": "Flutter Icon Browser",
+        "description": "Browse, search and get the code for any icons available in Flutter across five different packages. Available in Play Store, Desktop and the web.",
+        "skills": "Flutter, Dart",
+        "links": [
+            {
+                "url": "/fluttericonbrowser",
+                "title": "Home Page",
+                "icon": "https://img.icons8.com/ios/50/domain--v1.png"
+            },
+            {
+                "url": "https://github.com/Chandram-Dutta/flutter_icon_browser",
+                "title": "Github",
+                "icon": "https://img.icons8.com/?size=100&id=12598&format=png&color=000000"
+            }
+        ]
+    },
+    {
+        "title": "Step",
+        "description": "Winning Submission for the 2024 Apple Swift Student Challenge. It's designed for music lovers and creators, allowing you to load and play multiple stems simultaneously to craft beautiful melodies. If you've enjoyed using the Live Loops feature in GarageBand, you'll feel right at home with Step.",
+        "skills": "Swift, SwiftUI",
+        "links": [
+            {
+                "url": "https://github.com/Chandram-Dutta/step",
+                "title": "Github",
+                "icon": "https://img.icons8.com/?size=100&id=12598&format=png&color=000000"
+            }
+        ]
+    },
+    {
+        "title": "VITTY iOS",
+        "description": "VITTY lets you take a quick gander at your schedule for the day, see what class you have next and where you need to be! (VIT Students Only)",
+        "skills": "Swift, SwiftUI",
+        "links": [
+            {
+                "url": "https://apps.apple.com/in/app/vitty-vit-timetable-app/id1611750267",
+                "title": "App Store",
+                "icon": "https://img.icons8.com/?size=100&id=bep_ZUj5TddJ&format=png&color=000000"
+            },
+            {
+                "url": "https://github.com/GDGVIT/vitty-ios",
+                "title": "Github",
+                "icon": "https://img.icons8.com/?size=100&id=12598&format=png&color=000000"
+            }
+        ]
+    },
+    {
+        "title": "SoundCrowd",
+        "description": "SoundCrowd is a dynamic platform for hackathons and events to create collaborative playlists. It enables participants to contribute songs to a shared playlist while maintaining control over the approval of songs for their event playlists.",
+        "skills": "SvelteKit, TypeScript, TailwindCSS",
+        "links": [
+            {
+                "url": "https://soundcrowd.dscvit.com/",
+                "title": "Home Page",
+                "icon": "https://img.icons8.com/ios/50/domain--v1.png"
+            },
+            {
+                "url": "https://github.com/GDGVIT/soundcrowd-frontend",
+                "title": "Github",
+                "icon": "https://img.icons8.com/?size=100&id=12598&format=png&color=000000"
+            }
+        ]
+    },
+    {
+        "title": "Suzi",
+        "description": "An app that logs and creates actionable data on needy children and poor sanitation, helping NGOs and government bodies identify and address community needs.",
+        "skills": "Flutter, Dart, Kotlin, Firebase, GCP, Go, PostgreSQL, JavaScript, TypeScript",
+        "links": [
+            {
+                "url": "https://github.com/suzisuzisuzi",
+                "title": "Github",
+                "icon": "https://img.icons8.com/?size=100&id=12598&format=png&color=000000"
+            },
+            {
+                "url": "https://play.google.com/store/apps/details?id=me.chandramdutta.suzi_app&hl=en",
+                "title": "Play Store",
+                "icon": "https://img.icons8.com/ios/50/google-play--v1.png"
+            }
+        ]
+    },
+    {
+        "title": "Hitwick",
+        "description": "Combining the excitement of pinball with the intensity of ice hockey, this game takes you on a unique arcade experience.",
+        "skills": "Flutter, Dart",
+        "links": [
+            {
+                "url": "https://github.com/Chandram-Dutta/hitwick",
+                "title": "Github",
+                "icon": "https://img.icons8.com/?size=100&id=12598&format=png&color=000000"
+            },
+            {
+                "url": "https://play.google.com/store/apps/details?id=me.chandramdutta.hitwick&hl=en",
+                "title": "Play Store",
+                "icon": "https://img.icons8.com/ios/50/google-play--v1.png"
+            }
+        ]
+    },
+    {
+        "title": "Space Racer",
+        "description": "Looking for an out-of-this-world gaming experience? Look no further than Space Racer, the ultimate space-themed racing game!",
+        "skills": "Flutter, Dart, Firebase",
+        "links": [
+            {
+                "url": "https://play.google.com/store/apps/details?id=me.chandramdutta.space_racer&hl=en",
+                "title": "Play Store",
+                "icon": "https://img.icons8.com/ios/50/google-play--v1.png"
+            }
+        ]
+    },
+    {
+        "title": "Bestsellers",
+        "description": "An app that brings you the latest New York Times Bestsellers list right to your fingertips!",
+        "skills": "Flutter, Dart, NYT API",
+        "links": [
+            {
+                "url": "https://play.google.com/store/apps/details?id=me.chandramdutta.bestsellers&hl=en",
+                "title": "Play Store",
+                "icon": "https://img.icons8.com/ios/50/google-play--v1.png"
+            }
+        ]
+    },
+    {
+        "title": "Sassci",
+        "description": "A terminal based Image to ASCII converter written in Swift.",
+        "skills": "Swift",
+        "links": [
+            {
+                "url": "https://github.com/Chandram-Dutta/sassci",
+                "title": "Github",
+                "icon": "https://img.icons8.com/?size=100&id=12598&format=png&color=000000"
+            }
+        ]
+    }
+]
