@@ -1,0 +1,35 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+
+type Resource = {
+    title: string;
+    link: string;
+};
+
+let url = `${Astro.url.origin}/api/resources`;
+const response = await fetch(url);
+const resources: Resource[] = await response.json();
+---
+
+<Layout>
+    <main>
+        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {
+                resources.map((resource) => (
+                    <a
+                        href={resource.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <li>
+                            <h2 class="font-black font-shippori-antique-b1 text-2xl text-cyan-500 mb-4">
+                                - {resource.title}
+                            </h2>
+                        </li>
+                    </a>
+                ))
+            }
+        </ul>
+    </main>
+</Layout>

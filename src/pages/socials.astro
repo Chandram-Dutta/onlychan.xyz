@@ -1,0 +1,53 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+
+type Social = {
+    social: string;
+    link: string;
+    icon: string;
+    title: string;
+};
+
+let url = `${Astro.url.origin}/api/socials`;
+const response = await fetch(url);
+const socials: Social[] = await response.json();
+---
+
+<Layout>
+    <main>
+        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {
+                socials.map((social) => (
+                    <a
+                        href={social.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <li class="bg-gray-800 p-6 rounded-lg hover:shadow-md hover:shadow-cyan-500/20 transition-all">
+                            <h2 class="font-black font-shippori-antique-b1 text-2xl text-cyan-500 mb-3">
+                                {social.social}
+                            </h2>
+                            <p class="text-sm font-extralight mb-4">
+                                {social.title}
+                            </p>
+                        </li>
+                    </a>
+                ))
+            }
+        </ul>
+    </main>
+</Layout>
+
+<script>
+    const buttons = document.querySelectorAll("[data-open-url]");
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const url = button.getAttribute("data-url");
+            if (url) {
+                window.open(url, "_blank");
+            }
+        });
+    });
+</script>

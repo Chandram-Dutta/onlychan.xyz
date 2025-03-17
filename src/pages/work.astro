@@ -1,0 +1,72 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+
+type Work = {
+    title: string;
+    designation: string;
+    date: string;
+    location: string;
+    description: string;
+    skills: string;
+    links: {
+        url: string;
+        title: string;
+        icon: string;
+    }[];
+};
+
+let url = `${Astro.url.origin}/api/work`;
+const response = await fetch(url);
+const work: Work[] = await response.json();
+---
+
+<Layout>
+    <main>
+        <ul>
+            {
+                work.map((job) => (
+                    <li class="mb-8">
+                        <h2 class="font-black font-shippori-antique-b1 text-2xl text-cyan-500">
+                            {job.title}
+                        </h2>
+                        <p class="text-sm font-extralight">
+                            {job.designation} | {job.date} | {job.location}
+                        </p>
+                        <p class="text-sm font-extralight mb-4">
+                            Tech Stack: {job.skills}
+                        </p>
+                        <p>{job.description}</p>
+
+                        <ul class="mt-4">
+                            {job.links.map((link) => (
+                                <li>
+                                    <button
+                                        data-open-url="true"
+                                        class="p-2 bg-white mr-2 hover:scale-110 active:scale-90 transition text-black rounded-sm"
+                                        data-url={link.url}
+                                    >
+                                        {link.title}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </li>
+                ))
+            }
+        </ul>
+    </main>
+</Layout>
+
+<script>
+    const buttons = document.querySelectorAll("[data-open-url]");
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const url = button.getAttribute("data-url");
+            if (url) {
+                window.open(url, "_blank");
+            }
+        });
+    });
+</script>

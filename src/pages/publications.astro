@@ -1,0 +1,71 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+
+type Publication = {
+    title: string;
+    year: number;
+    conference?: string;
+    publisher: string;
+    link: string;
+    google_scholar_link: string;
+};
+
+let url = `${Astro.url.origin}/api/publications`;
+const response = await fetch(url);
+const publications: Publication[] = await response.json();
+---
+
+<Layout>
+    <main>
+        <ul class="grid grid-cols-1 gap-8">
+            {
+                publications.map((publication) => (
+                    <li class="bg-gray-800 p-6 rounded-lg hover:shadow-md hover:shadow-cyan-500/20 transition-all mb-8">
+                        <h2 class="font-black font-shippori-antique-b1 text-2xl text-cyan-500 mb-3">
+                            {publication.title}
+                        </h2>
+                        <p class="text-sm font-extralight mb-1">
+                            {publication.year} | {publication.publisher}
+                        </p>
+                        {publication.conference && (
+                            <p class="text-sm font-extralight ">
+                                {publication.conference}
+                            </p>
+                        )}
+
+                        <div class="flex flex-wrap">
+                            <button
+                                data-open-url="true"
+                                class="p-2 bg-white mt-4 mr-2 hover:scale-110 active:scale-90 transition text-black rounded-sm"
+                                data-url={publication.link}
+                            >
+                                Publication Link
+                            </button>
+                            <button
+                                data-open-url="true"
+                                class="p-2 bg-white mt-4 mr-2  hover:scale-110 active:scale-90 transition text-black rounded-sm"
+                                data-url={publication.google_scholar_link}
+                            >
+                                Google Scholar
+                            </button>
+                        </div>
+                    </li>
+                ))
+            }
+        </ul>
+    </main>
+</Layout>
+
+<script>
+    const buttons = document.querySelectorAll("[data-open-url]");
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const url = button.getAttribute("data-url");
+            if (url) {
+                window.open(url, "_blank");
+            }
+        });
+    });
+</script>

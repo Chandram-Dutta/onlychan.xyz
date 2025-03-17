@@ -1,0 +1,66 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+
+type Project = {
+    title: string;
+    description: string;
+    skills: string;
+    links: {
+        url: string;
+        title: string;
+        icon: string;
+    }[];
+};
+
+let url = `${Astro.url.origin}/api/projects`;
+const response = await fetch(url);
+const projects: Project[] = await response.json();
+---
+
+<Layout>
+    <main>
+        <ul>
+            {
+                projects.map((project) => (
+                    <li class="mb-8">
+                        <h2 class="font-black font-shippori-antique-b1 text-2xl text-cyan-500">
+                            {project.title}
+                        </h2>
+                        <p class="text-sm font-extralight mb-4">
+                            Tech Stack: {project.skills}
+                        </p>
+                        <p>{project.description}</p>
+
+                        <ul class="mt-4 flex flex-wrap">
+                            {project.links.map((link) => (
+                                <li class="mb-2">
+                                    <button
+                                        data-open-url="true"
+                                        class="p-2 bg-white mr-2 hover:scale-110 active:scale-90 transition text-black rounded-sm"
+                                        data-url={link.url}
+                                    >
+                                        {link.title}
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    </li>
+                ))
+            }
+        </ul>
+    </main>
+</Layout>
+
+<script>
+    const buttons = document.querySelectorAll("[data-open-url]");
+
+    buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const url = button.getAttribute("data-url");
+            if (url) {
+                window.open(url, "_blank");
+            }
+        });
+    });
+</script>

@@ -1,6 +1,7 @@
 ---
 import "@fontsource/shippori-antique-b1";
 import "@fontsource/dm-mono";
+import TopBar from "../components/TopBar.astro";
 ---
 
 <html lang="en" class="bg-black text-white font-dm-mono">
@@ -16,6 +17,8 @@ import "@fontsource/dm-mono";
 		/>
 	</head>
 	<body class="p-4 h-screen w-screen">
-		<slot />
+		<TopBar>
+			<slot />
+		</TopBar>
 	</body>
 </html>

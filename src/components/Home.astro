@@ -1,23 +1,32 @@
-<div class="m-8 flex flex-col">
-	<div class="flex flex-wrap">
-		<a
-			target="_blank"
-			class="mr-4 transition hover:underline"
-			href="https://links.onlychan.xyz/resume">resume</a
-		>
-		<a class="mr-4 transition hover:underline" href="/work">work</a>
-		<a class="mr-4 transition hover:underline" href="/projects">projects</a>
-		<a class="mr-4 transition hover:underline" href="/socials">socials</a>
-		<a class="mr-4 transition hover:underline" href="/publications"
-			>publications</a
-		>
-		<a class="mr-4 transition hover:underline" href="/blogs">blogs</a>
-		<a class="mr-4 transition hover:underline" href="/resources"
-			>resources</a
-		>
-	</div>
-	<h1 class="mt-4 font-doto text-4xl font-bold">
-		<a class="transition hover:scale-110" href="/">chandram</a>
-	</h1>
-	<div class="mt-16"><slot /></div>
-</div>
+---
+function getAge(): number {
+	const birthDate = new Date(2004, 1, 11);
+	const today = new Date();
+	let age = today.getFullYear() - birthDate.getFullYear();
+	const hasBirthdayOccurred =
+		today.getMonth() > birthDate.getMonth() ||
+		(today.getMonth() === birthDate.getMonth() &&
+			today.getDate() >= birthDate.getDate());
+	if (!hasBirthdayOccurred) {
+		age--;
+	}
+	return age;
+}
+---
+
+<ul class="list-inside">
+	<li class="pb-2">
+		- hi, i am chandram. i should be {getAge()} years old.
+	</li>
+	<li class="pb-2">
+		- rn i am majoring in electrical and electronics engineering at <a
+			href="https://vit.ac.in/"
+			class="underline">vellore institute of technology</a
+		>.
+	</li>
+	<li class="pb-2">
+		- i am working at <a href="https://adora-app.com/" class="underline"
+			>adora inc.</a
+		> as a sde intern.
+	</li>
+</ul>
