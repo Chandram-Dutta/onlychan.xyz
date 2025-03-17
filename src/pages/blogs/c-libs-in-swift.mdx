@@ -1,0 +1,157 @@
+---
+layout: ../../layouts/BlogPost.astro
+title: "Importing C Libraries in Swift"
+description: "Learn how to seamlessly import C libraries into Swift with this comprehensive guide."
+pubDate: 2024-09-10
+tags: ["swift", "c", "raylib"]
+---
+> find the code here [https://github.com/Chandram-Dutta/SwiftRaylib/](https://github.com/Chandram-Dutta/SwiftRaylib/tree/main)
+
+After watching [Tsoding](http://twitch.tv/tsoding) struggle with importing a C Library ([raylib](https://github.com/raysan5/raylib)) in his recent stream. I decided to make the process easier and more straightforward for developers. I totally agree that the official documentation is not very clear and lacks examples. This blog aims to address that issue.
+
+So we start by creating a swift package using
+
+```bash
+mkdir SwiftRaylib
+cd SwiftRaylib
+swift package init --name SwiftRaylib --type executable
+```
+
+This initialises our `SwiftRaylib` Package and the folder structure should look like this
+
+```bash
+SwiftRaylib/
+├── Package.swift
+└── Sources
+    └── main.swift
+```
+
+Now let's move the C Library in the Sources directory. We will use the raylib 5.0 release for macOS.
+
+Note that for Swift Package Manager(SPM) to include a C Library in project, the C Library should have a include directory with the header files present in it. In our case, raylib's file structure looks like this
+
+```bash
+raylib-5.0_macos/
+├── CHANGELOG
+├── LICENSE
+├── README.md
+├── include
+│   ├── raylib.h
+│   ├── raymath.h
+│   └── rlgl.h
+└── lib
+    ├── ...
+```
+
+where the include directory does contains all the necessary header files.
+
+Now another important change to make is creating a new folder in Sources with the same name as that of the Swift Project and moving the `main.swift` file inside it.
+
+```bash
+SwiftRaylib/
+├── Package.swift
+└── Sources
+    ├── SwiftRaylib
+    │   └── main.swift
+    └── raylib-5.0_macos
+```
+
+And now the last step is to edit `Package.swift`
+
+Presently `Package.swift` should look like this
+
+```swift
+// swift-tools-version: 6.0
+
+import PackageDescription
+
+let package = Package(
+    name: "SwiftRaylib",
+    targets: [
+        .executableTarget(
+            name: "SwiftRaylib")
+    ]
+)
+```
+
+We are going to add a `products` parameter that takes in an array of the C Library and the Swift Executable
+
+```swift
+// swift-tools-version: 6.0
+
+import PackageDescription
+
+let package = Package(
+    name: "SwiftRaylib",
+    products: [
+        .library(name: "raylib-5.0_macos", targets: ["raylib-5.0_macos"]),
+        .executable(
+            name: "SwiftRaylib",
+            targets: ["SwiftRaylib"]),
+    ],
+    targets: [
+        .executableTarget(
+            name: "SwiftRaylib"),
+    ]
+)
+```
+
+Secondly we will modify the `targets` by adding a target of our C Library and adding that as a dependency to our Swift executable target. We will also add a `swiftSettings` that enables the interoperability between C and Swift.
+
+```swift
+// swift-tools-version: 6.0
+
+import PackageDescription
+
+let package = Package(
+    name: "SwiftRaylib",
+    products: [
+        .library(name: "raylib-5.0_macos", targets: ["raylib-5.0_macos"]),
+        .executable(
+            name: "SwiftRaylib",
+            targets: ["SwiftRaylib"]),
+    ],
+    targets: [
+        .target(
+            name: "raylib-5.0_macos"),
+        .executableTarget(
+            name: "SwiftRaylib",
+            dependencies: ["raylib-5.0_macos"],
+            swiftSettings: [.interoperabilityMode(.Cxx)]),
+    ]
+)
+```
+
+Now running `swift run` should compile and run the project.
+
+To test we will import raylib in `main.swift` and write a simple program using `raymath.h`
+
+```swift
+import raylib_5_0_macos
+
+let v1 = Vector2(x: 3.0, y: 2.0)
+let v2 = Vector2(x: 4.0, y: 7.0)
+
+print("Distance between \(v1) and \(v2) is \(Vector2Distance(v1, v2))")
+```
+
+The output should be
+
+```bash
+Distance between Vector2(x: 3.0, y: 2.0) and Vector2(x: 4.0, y: 7.0) is 5.0990195
+```
+
+Note that `Vector2` and `Vector2Distance()` is being imported from the `raylib`.
+
+> I wasn't able to use any functions from `raylib.h` as it doesn't support arm64(atleast that's what I got from the compiler.
+> 
+> ```bash
+> error: link command failed with exit code 1 (use -v to see invocation)
+> Undefined symbols for architecture arm64:
+>   "_InitWindow", referenced from:
+>       _SwiftRaylib_main in main.swift.o
+> ld: symbol(s) not found for architecture arm64
+> clang: error: linker command failed with exit code 1 (use -v to see invocation)
+> ```
+> 
+> if someone knows more about this issue, please let me know!

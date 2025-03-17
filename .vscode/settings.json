@@ -1,0 +1,8 @@
+{
+    "[mdx]": {
+        "editor.rulers": [
+            120
+        ],
+        "editor.wordWrap": "wordWrapColumn"
+    }
+}

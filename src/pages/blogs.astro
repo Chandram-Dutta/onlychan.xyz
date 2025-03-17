@@ -1,0 +1,46 @@
+---
+import Layout from "../layouts/Layout.astro";
+import "../styles/global.css";
+
+const blogs: any[] = Object.values(import.meta.glob("./blogs/*.mdx", { eager: true }));
+
+blogs.sort(
+	(a, b) =>
+		new Date(b.frontmatter.pubDate).valueOf() -
+		new Date(a.frontmatter.pubDate).valueOf(),
+);
+---
+
+<Layout>
+    <main>
+        {
+            blogs.length === 0 ? (
+                <p>No blog posts found. Check back soon!</p>
+            ) : (
+                <ul class="space-y-6">
+                    {blogs.map((blog) => (
+                        <li class="border-l-4 border-cyan-500 pl-4 transition-all hover:border-cyan-300 hover:pl-6">
+                            <a href={blog.url}>
+                                <h2 class="font-black font-shippori-antique-b1 text-2xl text-cyan-500 mb-2">
+                                    {blog.frontmatter.title}
+                                </h2>
+                                <p class="text-gray-400 mb-2">
+                                    {new Date(
+                                        blog.frontmatter.pubDate,
+                                    ).toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    })}
+                                </p>
+                                <p class="text-gray-300">
+                                    {blog.frontmatter.description}
+                                </p>
+                            </a>
+                        </li>
+                    ))}
+                </ul>
+            )
+        }
+    </main>
+</Layout>
