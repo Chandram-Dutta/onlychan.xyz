@@ -5,6 +5,8 @@ import node from '@astrojs/node';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
+import react from '@astrojs/react';
+
 // https://astro.build/config
 export default defineConfig({
   vite: {
@@ -17,5 +19,5 @@ export default defineConfig({
   server: {
     host: '0.0.0.0'
   },
-  integrations: [mdx(), sitemap()]
+  integrations: [mdx(), sitemap(), react()]
 });
