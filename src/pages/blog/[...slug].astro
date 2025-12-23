@@ -1,0 +1,224 @@
+---
+import { getCollection, render } from "astro:content";
+import "../../styles/global.css";
+
+export async function getStaticPaths() {
+    const posts = await getCollection("blog");
+    return posts.map((post) => ({
+        params: { slug: post.id },
+        props: { post },
+    }));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="description" content={post.data.description} />
+        <title>{post.data.title} | onlychan</title>
+        <script>
+            if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                document.documentElement.classList.add("dark");
+            }
+        </script>
+    </head>
+    <body
+        class="font-serif bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen relative overflow-x-hidden"
+    >
+        <div class="fixed inset-0 -z-10 overflow-hidden">
+            <div class="blob blob-1"></div>
+            <div class="blob blob-2"></div>
+            <div class="blob blob-3"></div>
+            <div class="blob blob-4"></div>
+            <div class="blob blob-5"></div>
+        </div>
+        <div class="mx-auto max-w-4xl p-4 md:px-8 lg:px-12 relative z-10">
+            <a href="/blog" class="text-sm hover:underline opacity-70"
+                >← all posts</a
+            >
+            <article class="pt-4">
+                <header
+                    class="pb-6 border-b border-neutral-200 dark:border-neutral-800"
+                >
+                    <h1
+                        class="font-bold text-3xl md:text-4xl font-instrument-serif"
+                    >
+                        {post.data.title}
+                    </h1>
+                    <p class="text-sm opacity-60 mt-2">
+                        {
+                            post.data.pubDate.toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                            })
+                        }
+                    </p>
+                    <div class="flex gap-2 mt-3 flex-wrap">
+                        {
+                            post.data.tags.map((tag) => (
+                                <span class="text-xs px-2 py-0.5 bg-neutral-200 dark:bg-neutral-800 rounded">
+                                    {tag}
+                                </span>
+                            ))
+                        }
+                    </div>
+                </header>
+                <div
+                    class="prose prose-neutral dark:prose-invert max-w-none pt-6
+                    prose-headings:font-instrument-serif prose-headings:font-bold
+                    prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
+                    prose-a:underline prose-a:decoration-1
+                    prose-li:my-1
+                    prose-p:leading-relaxed"
+                >
+                    <Content />
+                </div>
+            </article>
+        </div>
+    </body>
+</html>
+
+<style>
+    :global(.prose code::before),
+    :global(.prose code::after) {
+        content: none !important;
+    }
+
+    .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.35;
+    }
+
+    :global(.dark) .blob {
+        opacity: 0.12;
+    }
+
+    .blob-1 {
+        width: 500px;
+        height: 500px;
+        background: linear-gradient(135deg, #8b5cf6, #ec4899);
+        top: 50%;
+        left: 50%;
+        animation: orbit1 30s linear infinite;
+    }
+
+    .blob-2 {
+        width: 400px;
+        height: 400px;
+        background: linear-gradient(135deg, #f472b6, #fb923c);
+        top: 50%;
+        left: 50%;
+        animation: orbit2 35s linear infinite;
+    }
+
+    .blob-3 {
+        width: 350px;
+        height: 350px;
+        background: linear-gradient(135deg, #22d3ee, #3b82f6);
+        top: 50%;
+        left: 50%;
+        animation: orbit3 25s linear infinite;
+    }
+
+    .blob-4 {
+        width: 300px;
+        height: 300px;
+        background: linear-gradient(135deg, #34d399, #14b8a6);
+        top: 50%;
+        left: 50%;
+        animation: orbit4 28s linear infinite;
+    }
+
+    .blob-5 {
+        width: 450px;
+        height: 450px;
+        background: linear-gradient(135deg, #fbbf24, #f97316);
+        top: 50%;
+        left: 50%;
+        animation: orbit5 32s linear infinite;
+    }
+
+    @keyframes orbit1 {
+        0% {
+            transform: translate(-50%, -50%) rotate(0deg) translateX(250px)
+                rotate(0deg) scale(1);
+        }
+        50% {
+            transform: translate(-50%, -50%) rotate(180deg) translateX(250px)
+                rotate(-180deg) scale(1.1);
+        }
+        100% {
+            transform: translate(-50%, -50%) rotate(360deg) translateX(250px)
+                rotate(-360deg) scale(1);
+        }
+    }
+
+    @keyframes orbit2 {
+        0% {
+            transform: translate(-50%, -50%) rotate(120deg) translateX(300px)
+                rotate(-120deg) scale(1);
+        }
+        50% {
+            transform: translate(-50%, -50%) rotate(300deg) translateX(300px)
+                rotate(-300deg) scale(0.95);
+        }
+        100% {
+            transform: translate(-50%, -50%) rotate(480deg) translateX(300px)
+                rotate(-480deg) scale(1);
+        }
+    }
+
+    @keyframes orbit3 {
+        0% {
+            transform: translate(-50%, -50%) rotate(240deg) translateX(200px)
+                rotate(-240deg) scale(1);
+        }
+        50% {
+            transform: translate(-50%, -50%) rotate(420deg) translateX(200px)
+                rotate(-420deg) scale(1.05);
+        }
+        100% {
+            transform: translate(-50%, -50%) rotate(600deg) translateX(200px)
+                rotate(-600deg) scale(1);
+        }
+    }
+
+    @keyframes orbit4 {
+        0% {
+            transform: translate(-50%, -50%) rotate(60deg) translateX(350px)
+                rotate(-60deg) scale(1);
+        }
+        50% {
+            transform: translate(-50%, -50%) rotate(240deg) translateX(350px)
+                rotate(-240deg) scale(1.08);
+        }
+        100% {
+            transform: translate(-50%, -50%) rotate(420deg) translateX(350px)
+                rotate(-420deg) scale(1);
+        }
+    }
+
+    @keyframes orbit5 {
+        0% {
+            transform: translate(-50%, -50%) rotate(180deg) translateX(180px)
+                rotate(-180deg) scale(1);
+        }
+        50% {
+            transform: translate(-50%, -50%) rotate(360deg) translateX(180px)
+                rotate(-360deg) scale(0.92);
+        }
+        100% {
+            transform: translate(-50%, -50%) rotate(540deg) translateX(180px)
+                rotate(-540deg) scale(1);
+        }
+    }
+</style>

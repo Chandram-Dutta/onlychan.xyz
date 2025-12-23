@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jetbrains+Mono:wght@400;500;600&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap");
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+    --font-instrument-serif: "Instrument Serif", serif;
+    --font-serif: "Noto Serif", serif;
+    --font-jetbrains-mono: "Jetbrains Mono", monospace;
+}
+
+code {
+    font-family: var(--font-jetbrains-mono);
+}
