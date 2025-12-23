@@ -96,6 +96,8 @@ const { Content } = await render(post);
         border-radius: 50%;
         filter: blur(80px);
         opacity: 0.35;
+        will-change: transform;
+        transform: translateZ(0);
     }
 
     :global(.dark) .blob {
