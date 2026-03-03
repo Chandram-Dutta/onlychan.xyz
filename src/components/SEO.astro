@@ -1,0 +1,35 @@
+---
+interface Props {
+    title: string;
+    description: string;
+    image?: string;
+    slug?: string;
+    url?: string;
+    type?: "website" | "article";
+}
+
+const {
+    title,
+    description,
+    image,
+    slug = "default",
+    url = Astro.url.href,
+    type = "website",
+} = Astro.props;
+
+const siteUrl = Astro.site?.href ?? "https://onlychan.xyz";
+const ogImage = image ?? `/og/${slug}.png`;
+const absoluteImageUrl = ogImage.startsWith("http") ? ogImage : `${siteUrl.replace(/\/$/, "")}${ogImage}`;
+---
+
+<meta property="og:type" content={type} />
+<meta property="og:url" content={url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={absoluteImageUrl} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:url" content={url} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={absoluteImageUrl} />

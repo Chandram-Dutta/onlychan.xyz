@@ -1,0 +1,72 @@
+---
+title: "Economy of Agentic Tokens"
+description: "A look at token subsidies, pricing models, and the real economics behind AI coding tools"
+pubDate: 2026-01-17
+tags: ["ai", "economy"]
+---
+
+# Introduction
+
+Over the past year, we have seen the rise of AI coding tools and code-focused LLMs. I have personally used a lot of these, both for experimentation and for serious work.
+
+I have used <a href="https://www.cursor.com/" target="_blank" rel="noopener noreferrer">Cursor</a> Pro (Student Plan), <a href="https://github.com/features/copilot" target="_blank" rel="noopener noreferrer">GitHub Copilot</a> Pro (Student Plan), <a href="https://windsurf.com/" target="_blank" rel="noopener noreferrer">Windsurf</a> Pro, <a href="https://gemini.google.com/" target="_blank" rel="noopener noreferrer">Antigravity</a> (Google One AI Pro), <a href="https://zed.dev/" target="_blank" rel="noopener noreferrer">Zed AI</a> Pro, <a href="https://ampcode.com/" target="_blank" rel="noopener noreferrer">Amp</a> (paid and free), <a href="https://www.factory.ai/" target="_blank" rel="noopener noreferrer">Factory Droid</a> Pro and <a href="https://openai.com/index/introducing-codex/" target="_blank" rel="noopener noreferrer">Codex</a> (OpenAI Pro). What I have realized is that the economy behind each of these products is quite interesting and not as easy to understand as it seems. The more interesting part is how each of these products is subsidizing the cost of the tokens you use, and how they are actually trying to make money, because we all know tokens are expensive.
+
+# "$x = 0.y × x tokens" Subscriptions
+
+Most tools belong to this category, and it is probably the easiest to understand. Cursor, GitHub Copilot, Windsurf, Zed, Amp and Factory Droid follow this model. You pay $x and you get $x tokens plus some $y$ commission, which can be zero. You use more, and you can add more tokens to your account at a fixed rate.
+
+Some tools (GitHub Copilot and Windsurf) mask tokens and instead provide you with a number of messages per month, with a fixed number of tool calls per message. In such cases, different models have different multipliers on the number of messages you can send, because all models do not cost the same.
+
+This is easy to understand, right? Well, not really.
+
+<img src="https://d3p2bvoe452d0z.cloudfront.net/padme-anakin-eoat-blog-meme.jpg" alt="Four-panel Star Wars meme with Anakin and Padmé. Anakin says “$20 pro plan gives you $20 in tokens.” Padmé replies “That means I get what I pay,” then looks uncertain and says “Right?”" width="300" class="block mx-auto" />
+
+Cursor actually, and weirdly, gives you more than $20 of tokens if you do not have On-Demand Usage enabled. Last month, I used more than $20 of tokens and it just said it was included in the Pro plan. It stopped me at around $42. The reason is that they themselves are subsidized by their model providers.
+
+This does not happen when you have On-Demand Usage enabled, which is extremely weird. Why would you subsidize people who do not want to pay more for tokens? Then I realized that they also have a $60 and a $200 plan, which I would assume are also being subsidized for higher usage, and they might want more people opting for an upfront subscription rather than paying as they go. That would work well when pitching to VCs, right?
+
+Zed AI, on the other hand, actually gives you $5 of tokens for a $10 subscription, and a 10% extra commission when you buy more tokens. This is a terrible deal that does not make sense on the surface. But they are not selling you an AI agent, they are selling you an IDE. They also allow you, and to some extent recommend, that you use BYOK. They are also building <a href="https://agentclientprotocol.org/" target="_blank" rel="noopener noreferrer">Agent Client Protocol (ACP)</a>, which allows you to use other agentic CLI harnesses with their IDE frontend. Their own agentic AI harness is not good compared to others, and I think they know it. But it is a damn good IDE and my daily driver. I hope they improve their own agentic AI harness in the future and have a subscription that makes more sense, but for now, if you get Zed Pro, it is not a good deal.
+
+As for GitHub Copilot, Windsurf, Amp (paid, we are going to talk about the free thing), Factory Droid, and <a href="https://opencode.ai/" target="_blank" rel="noopener noreferrer">OpenCode</a> (BYOK/provider), it is pretty simple to understand, without a lot of weirdness.
+
+You get what you pay for.
+
+# Artificially Priced Subscriptions
+
+Now this is weird and interesting, because if you look closely, the companies that do this are the ones that own the models they serve you.
+
+To me, this is very simple to understand. The lower-tier subscriptions pay for the higher-tier subscriptions, which are highly subsidized, and that in turn locks serious users into a subscription and the models they build. This includes Antigravity, Codex, and <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener noreferrer">Claude Code</a>. Often, these subscriptions are bundled with other services from the same company. They are also able to do this because they decide the API rates and they do not have to pay anyone else for the tokens you use.
+
+This is capitalism at its best. The main motive for these companies is to lock in as many people as possible into their subscription model and the models they build.
+
+Honestly, it is a win for heavy users, because a $200 subscription is actually around $2000 in tokens. But I cannot help but wonder if this is good for other companies that cannot afford to subsidize their subscriptions in this way. Secondly, if you cannot afford to pay $200 upfront, like me, a student, a $20 subscription to Cursor makes more sense than a $200 subscription to Claude Code.
+
+My suggestion: if you are a heavy user, go for bundled subscriptions. If you are a casual user, go for the "$_x_ = _0.y_ × _x_ tokens" subscriptions.
+
+# Amp Free
+
+The Amp free plan is actually one of the best examples of subsidizing the cost of the tokens you use that I have seen, and a tactic that companies have been using for a long time, just not in AI. It honestly baffles me that more companies are not using this.
+
+You get ads when you use the free plan, and you get $10 free per day, which is around $300 per month in tokens.
+
+That is a nice deal, but you do have to use Opus 4.5 (smart mode) or Haiku 4.5 (rush mode). In my usage, you get around 3 to 4 messages for heavy tasks and 10 to 11 messages for small tasks a day. This makes me wonder how much I would pay when I work full time and need to use AI coding tools all day long, and that is the entire motive behind this blog post.
+
+And when I think more about this, suddenly the $200 subscription in Claude Code makes more sense.
+
+The question then is: should I go for a subscription that heavily subsidizes the cost of the tokens, or should I go for a tool that is extremely good for the job and not an afterthought from a model provider, even if it costs more?
+
+Well, I do not know.
+
+<div class="bg-yellow-500/10 dark:bg-yellow-400/10 border-l-4 border-yellow-500 dark:border-yellow-400 px-3 py-2.5 my-6 backdrop-blur-sm rounded-lg">
+  <div class="flex items-center gap-2.5">
+    <svg class="h-5 w-5 flex-shrink-0 text-yellow-600 dark:text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+    </svg>
+    <p class="text-sm text-neutral-900 dark:text-neutral-100">
+      <strong>Disclaimer:</strong> I am not sponsored or affiliated with any company in any way. I personally use Amp, Cursor, and Zed for my daily coding needs, and I am not paid to say anything about them.
+    </p>
+  </div>
+</div>
+
+
+EDIT: So Cursor's $200 plan gives around $500 in tokens according to this <a href="https://x.com/peytoncasper/status/1995236829684187558?s=20" target="_blank" rel="noopener noreferrer">tweet</a>, which actually puts them in the Artificially Priced Subscriptions category. Not heavily subsidized like model providers but they are surely trying to lock in more users into their subscription model.

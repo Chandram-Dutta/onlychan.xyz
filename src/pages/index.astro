@@ -1,6 +1,8 @@
 ---
 import "../styles/global.css";
 import { getCollection } from "astro:content";
+import Banner from "../components/Banner.astro";
+import SEO from "../components/SEO.astro";
 
 const posts = await getCollection("blog");
 const sortedPosts = posts.sort(
@@ -14,7 +16,15 @@ const sortedPosts = posts.sort(
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
+        <meta
+            name="description"
+            content="Chandram Dutta - Software Developer and Student"
+        />
         <title>onlychan</title>
+        <SEO
+            title="Chandram Dutta | onlychan"
+            description="Software developer and student. Senior at VIT, Vellore majoring in Electrical and Electronics Engineering."
+        />
         <script>
             if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
                 document.documentElement.classList.add("dark");
@@ -24,6 +34,7 @@ const sortedPosts = posts.sort(
     <body
         class="font-serif bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen relative overflow-x-hidden"
     >
+        <!-- <Banner /> -->
         <div class="fixed inset-0 -z-10 overflow-hidden">
             <div class="blob blob-1"></div>
             <div class="blob blob-2"></div>
@@ -151,6 +162,15 @@ const sortedPosts = posts.sort(
                     It is an app that logs and creates actionable data on needy children
                     and poor sanitation, helping NGOs and government bodies identify
                     and address community needs.
+                </li>
+                <li>
+                    A
+                    <a
+                        class="underline"
+                        target="_blank"
+                        href="https://github.com/Chandram-Dutta/dns_resolver_rs"
+                        >DNS Resolver</a
+                    > from scratch in Rust
                 </li>
                 <li>
                     <a

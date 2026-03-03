@@ -1,0 +1,1 @@
+- This portfolio website uses Astro, Tailwind and Bun.

@@ -1,0 +1,42 @@
+---
+interface Props {
+    message?: string;
+    linkText?: string;
+    linkUrl?: string;
+}
+
+const {
+    message = "My GitHub account has been suspended with no reason.",
+    linkText = "Find me on GitLab",
+    linkUrl = "https://links.onlychan.xyz/gitlab",
+} = Astro.props;
+---
+
+<div
+    id="site-banner"
+    class="bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-100 px-4 py-3 text-center text-sm relative z-50"
+>
+    <div
+        class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-center gap-2"
+    >
+        <span class="font-medium">{message}</span>
+        {
+            linkUrl && (
+                <a
+                    href={linkUrl}
+                    target="_blank"
+                    class="underline font-bold hover:text-red-900 dark:hover:text-white"
+                >
+                    {linkText}
+                </a>
+            )
+        }
+    </div>
+    <button
+        aria-label="Dismiss"
+        class="absolute right-2 top-1/2 -translate-y-1/2 opacity-60 hover:opacity-100 p-2"
+        onclick="document.getElementById('site-banner').remove()"
+    >
+        ✕
+    </button>
+</div>
