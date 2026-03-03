@@ -1,344 +1,230 @@
 ---
-import "../styles/global.css";
-import { getCollection } from "astro:content";
-import Banner from "../components/Banner.astro";
-import SEO from "../components/SEO.astro";
+import"../styles/global.css";
+import { getCollection } from"astro:content";
+import Banner from"../components/Banner.astro";
+import SEO from"../components/SEO.astro";
 
 const posts = await getCollection("blog");
 const sortedPosts = posts.sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+ (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <meta name="viewport" content="width=device-width" />
-        <meta name="generator" content={Astro.generator} />
-        <meta
-            name="description"
-            content="Chandram Dutta - Software Developer and Student"
-        />
-        <title>onlychan</title>
-        <SEO
-            title="Chandram Dutta | onlychan"
-            description="Software developer and student. Senior at VIT, Vellore majoring in Electrical and Electronics Engineering."
-        />
-        <script>
-            if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-                document.documentElement.classList.add("dark");
-            }
-        </script>
-    </head>
-    <body
-        class="font-serif bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen relative overflow-x-hidden"
-    >
-        <!-- <Banner /> -->
-        <div class="fixed inset-0 -z-10 overflow-hidden">
-            <div class="blob blob-1"></div>
-            <div class="blob blob-2"></div>
-            <div class="blob blob-3"></div>
-            <div class="blob blob-4"></div>
-            <div class="blob blob-5"></div>
-        </div>
+ <head>
+ <meta charset="utf-8" />
+ <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+ <meta name="viewport" content="width=device-width" />
+ <meta name="generator" content={Astro.generator} />
+ <meta
+ name="description"
+ content="Chandram Dutta - Software Developer and Student"
+ />
+ <title>onlychan</title>
+ <SEO
+ title="Chandram Dutta | onlychan"
+ description="Software developer and student. Senior at VIT, Vellore majoring in Electrical and Electronics Engineering."
+ />
+ <script>
+ if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+ document.documentElement.classList.add("dark");
+ }
+ </script>
+ </head>
+ <body
+ class="font-serif bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen relative overflow-x-hidden [&_a]:text-(--link-accent) [&_a:hover]:text-(--link-accent-hover) dark:[&_a]:text-(--link-accent-dark) dark:[&_a:hover]:text-(--link-accent-dark-hover)"
+ >
+ <!-- <Banner /> -->
+ <div class="mx-auto max-w-4xl p-4 md:px-8 lg:px-12 relative z-10">
+ <h1 class="font-bold text-4xl pb-4 font-instrument-serif">
+ Chandram Dutta
+ </h1>
+ Hello,<br />
+ I am a 21 years old software developer and student. I am currently a senior
+ majoring in Electrical and Electronics Engineering at <a
 
-        <div class="mx-auto max-w-4xl p-4 md:px-8 lg:px-12 relative z-10">
-            <h1 class="font-bold text-4xl pb-4 font-instrument-serif">
-                Chandram Dutta
-            </h1>
-            Hello,<br />
-            I am a 21 years old software developer and student. I am currently a senior
-            majoring in Electrical and Electronics Engineering at <a
-                class="underline"
-                target="_blank"
-                href="https://vit.ac.in/">VIT, Vellore</a
-            >. I also work at
-            <a class="underline" target="_blank" href="https://adora-app.com/"
-                >Adora</a
-            > as a software developer intern. <br /><br />
-            Here's a link to my <a
-                class="underline"
-                target="_blank"
-                href="https://links.onlychan.xyz/resume/">Resume</a
-            >.<br /><br />
-            You can contact me on <a
-                class="underline"
-                target="_blank"
-                href="https://links.onlychan.xyz/x">X</a
-            >, <a
-                class="underline"
-                target="_blank"
-                href="https://links.onlychan.xyz/github">GitHub</a
-            >, <a
-                class="underline"
-                target="_blank"
-                href="https://links.onlychan.xyz/instagram">Instagram</a
-            >, <a
-                class="underline"
-                target="_blank"
-                href="https://links.onlychan.xyz/linkedin">LinkedIn</a
-            > & <a
-                class="underline"
-                target="_blank"
-                href="mailto:chandramdutta2004@gmail.com">Email</a
-            >.
-            <br /><br />
-            I have published a few research articles:
-            <ul class="list-disc pl-6">
-                <li>
-                    <a
-                        class="underline"
-                        target="_blank"
-                        href="https://ieeexplore.ieee.org/abstract/document/10434850"
-                    >
-                        Programmable Wireless Adapter for Commercial Electric
-                        Drives and Multifunction Meters</a
-                    > at 2023 Innovations in Power and Advanced Computing Technologies
-                    (i-PACT)
-                </li>
-                <li>
-                    <a
-                        class="underline"
-                        target="_blank"
-                        href="https://link.springer.com/article/10.1007/s11220-024-00499-w"
-                        >Device to Measure Respiratory Rate in Children, in
-                        Resource Poor Settings</a
-                    > in Springer US
-                </li>
-            </ul>
-            Here's my <a
-                class="underline"
-                target="_blank"
-                href="https://links.onlychan.xyz/gscholar">Google Scholar</a
-            > Profile.<br /><br />
-            I have created a few fun projects over the years like
-            <ul class="list-disc pl-6">
-                <li>
-                    <a
-                        class="underline"
-                        target="_blank"
-                        href="https://github.com/Chandram-Dutta/flutter_icon_browser"
-                        >Flutter Icon Browser</a
-                    > which helps you find icons for your flutter projects across
-                    5 different icon packages.
-                </li>
-                <li>
-                    <a
-                        class="underline"
-                        target="_blank"
-                        href="https://github.com/Chandram-Dutta/step">Step</a
-                    >
-                    which was my winning submission for <b class="underline"
-                        >2024 Apple Swift Student Challenge</b
-                    >. It lets you load and play multiple stems simultaneously
-                    to craft your own music.
-                </li>
-                <li>
-                    <a
-                        class="underline"
-                        target="_blank"
-                        href="https://github.com/GDGVIT/vitty-ios">VITTY iOS</a
-                    > which lets VIT Students take a quick gander at your schedule
-                    for the day, see what class you have next and where you need to
-                    be!
-                </li>
-                <li>
-                    <a
-                        class="underline"
-                        target="_blank"
-                        href="https://soundcrowd.dscvit.com/">SoundCrowd</a
-                    > which is a dynamic platform for hackathons and events to create
-                    collaborative playlists. It enables participants to contribute
-                    songs to a shared playlist while maintaining control over the
-                    approval of songs for their event playlists.
-                </li>
-                <li>
-                    <a
-                        class="underline"
-                        target="_blank"
-                        href="https://github.com/suzisuzisuzi">SUZI</a
-                    > which was our submission for GDSC Solutions Challenge 2024.
-                    It is an app that logs and creates actionable data on needy children
-                    and poor sanitation, helping NGOs and government bodies identify
-                    and address community needs.
-                </li>
-                <li>
-                    A
-                    <a
-                        class="underline"
-                        target="_blank"
-                        href="https://github.com/Chandram-Dutta/dns_resolver_rs"
-                        >DNS Resolver</a
-                    > from scratch in Rust
-                </li>
-                <li>
-                    <a
-                        class="underline"
-                        target="_blank"
-                        href="https://github.com/Chandram-Dutta/sassci"
-                        >Sassci</a
-                    > which is a pretty tiny CLI written in Swift that lets you convert
-                    your images to ASCII art.
-                </li>
-            </ul>
-            <br />
-            I also write sometimes:
-            <ul class="list-disc pl-6">
-                {
-                    sortedPosts.map((post) => (
-                        <li>
-                            <a class="underline" href={`/blog/${post.id}/`}>
-                                {post.data.title}
-                            </a>
-                            <span class="opacity-60 text-sm">
-                                {" "}
-                                —{" "}
-                                {post.data.pubDate.toLocaleDateString("en-US", {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                })}
-                            </span>
-                        </li>
-                    ))
-                }
-            </ul>
-        </div>
-    </body>
+ target="_blank"
+ href="https://vit.ac.in/">VIT, Vellore</a
+ >. I also work at
+ <a target="_blank" href="https://adora-app.com/"
+ >Adora</a
+ > as a software developer intern. <br /><br />
+ Here's a link to my <a
+
+ target="_blank"
+ href="https://links.onlychan.xyz/resume/">Resume</a
+ > & my <a
+
+ target="_blank"
+ href="https://links.onlychan.xyz/cv/">CV</a
+ >.<br /><br />
+ You can contact me on <a
+
+ target="_blank"
+ href="https://links.onlychan.xyz/x">X</a
+ >, <a
+
+ target="_blank"
+ href="https://links.onlychan.xyz/github">GitHub</a
+ >, <a
+
+ target="_blank"
+ href="https://links.onlychan.xyz/instagram">Instagram</a
+ >, <a
+
+ target="_blank"
+ href="https://links.onlychan.xyz/linkedin">LinkedIn</a
+ > & <a
+
+ target="_blank"
+ href="mailto:chandramdutta2004@gmail.com">Email</a
+ >.
+ <br /><br />
+ I have published a few research articles:
+ <ul class="list-disc pl-6">
+ <li>
+ <a
+
+ target="_blank"
+ href="https://ieeexplore.ieee.org/abstract/document/10434850"
+ >
+ Programmable Wireless Adapter for Commercial Electric
+ Drives and Multifunction Meters</a
+ > at 2023 Innovations in Power and Advanced Computing Technologies
+ (i-PACT)
+ </li>
+ <li>
+ <a
+
+ target="_blank"
+ href="https://link.springer.com/article/10.1007/s11220-024-00499-w"
+ >Device to Measure Respiratory Rate in Children, in
+ Resource Poor Settings</a
+ > in Springer US
+ </li>
+ <li>
+ <a
+
+ target="_blank"
+ href="https://www.sciencedirect.com/science/article/pii/S2468067226000039"
+ >CAN-DAQ: An open-source, cost-effective data capture
+ device and software for automotive research</a
+ > in HardwareX by Elsevier
+ </li>
+ </ul>
+ Here's my <a
+
+ target="_blank"
+ href="https://links.onlychan.xyz/gscholar">Google Scholar</a
+ > Profile.<br /><br />
+ I have created a few fun projects over the years like
+ <ul class="list-disc pl-6">
+ <li>
+ <a
+
+ target="_blank"
+ href="https://github.com/Chandram-Dutta/Iris">Iris</a
+ > which is a minimal 2D Game Engine written in Swift
+ </li>
+ <li>
+ <a
+
+ target="_blank"
+ href="https://github.com/Chandram-Dutta/hyena_dart"
+ >Hyena Dart</a
+ > is a powerful Flutter/Dart codebase analyzer that detects dead
+ code and calculates code complexity metrics
+ </li>
+ <li>
+ <a
+
+ target="_blank"
+ href="https://github.com/Chandram-Dutta/flutter_icon_browser"
+ >Flutter Icon Browser</a
+ > which helps you find icons for your flutter projects across
+ 5 different icon packages.
+ </li>
+ <li>
+ <a
+
+ target="_blank"
+ href="https://github.com/Chandram-Dutta/step">Step</a
+ >
+ which was my winning submission for <b
+ >2024 Apple Swift Student Challenge</b
+ >. It lets you load and play multiple stems simultaneously
+ to craft your own music.
+ </li>
+ <li>
+ <a
+
+ target="_blank"
+ href="https://github.com/GDGVIT/vitty-ios">VITTY iOS</a
+ > which lets VIT Students take a quick gander at your schedule
+ for the day, see what class you have next and where you need to
+ be!
+ </li>
+ <li>
+ <a
+
+ target="_blank"
+ href="https://github.com/suzisuzisuzi">SUZI</a
+ > which was our submission for GDSC Solutions Challenge 2024.
+ It is an app that logs and creates actionable data on needy children
+ and poor sanitation, helping NGOs and government bodies identify
+ and address community needs.
+ </li>
+ <li>
+ A
+ <a
+
+ target="_blank"
+ href="https://github.com/Chandram-Dutta/dns_resolver_rs"
+ >DNS Resolver</a
+ > from scratch in Rust
+ </li>
+ <li>
+ <a
+
+ target="_blank"
+ href="https://soundcrowd.dscvit.com/">SoundCrowd</a
+ > which is a dynamic platform for hackathons and events to create
+ collaborative playlists. It enables participants to contribute
+ songs to a shared playlist while maintaining control over the
+ approval of songs for their event playlists.
+ </li>
+ <li>
+ <a
+
+ target="_blank"
+ href="https://github.com/Chandram-Dutta/sassci"
+ >Sassci</a
+ > which is a pretty tiny CLI written in Swift that lets you convert
+ your images to ASCII art.
+ </li>
+ </ul>
+ <br />
+ I also write sometimes:
+ <ul class="list-disc pl-6">
+ {
+ sortedPosts.map((post) => (
+ <li>
+ <a href={`/blog/${post.id}/`}>
+ {post.data.title}
+ </a>
+ <span class="opacity-60 text-sm">
+ {""}
+ —{""}
+ {post.data.pubDate.toLocaleDateString("en-US", {
+ year:"numeric",
+ month:"short",
+ day:"numeric",
+ })}
+ </span>
+ </li>
+ ))
+ }
+ </ul>
+ </div>
+ </body>
 </html>
-
-<style>
-    .blob {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(80px);
-        opacity: 0.35;
-        will-change: transform;
-        transform: translateZ(0);
-    }
-
-    :global(.dark) .blob {
-        opacity: 0.12;
-    }
-
-    .blob-1 {
-        width: 500px;
-        height: 500px;
-        background: linear-gradient(135deg, #8b5cf6, #ec4899);
-        top: 50%;
-        left: 50%;
-        animation: orbit1 30s linear infinite;
-    }
-
-    .blob-2 {
-        width: 400px;
-        height: 400px;
-        background: linear-gradient(135deg, #f472b6, #fb923c);
-        top: 50%;
-        left: 50%;
-        animation: orbit2 35s linear infinite;
-    }
-
-    .blob-3 {
-        width: 350px;
-        height: 350px;
-        background: linear-gradient(135deg, #22d3ee, #3b82f6);
-        top: 50%;
-        left: 50%;
-        animation: orbit3 25s linear infinite;
-    }
-
-    .blob-4 {
-        width: 300px;
-        height: 300px;
-        background: linear-gradient(135deg, #34d399, #14b8a6);
-        top: 50%;
-        left: 50%;
-        animation: orbit4 28s linear infinite;
-    }
-
-    .blob-5 {
-        width: 450px;
-        height: 450px;
-        background: linear-gradient(135deg, #fbbf24, #f97316);
-        top: 50%;
-        left: 50%;
-        animation: orbit5 32s linear infinite;
-    }
-
-    @keyframes orbit1 {
-        0% {
-            transform: translate(-50%, -50%) rotate(0deg) translateX(250px)
-                rotate(0deg) scale(1);
-        }
-        50% {
-            transform: translate(-50%, -50%) rotate(180deg) translateX(250px)
-                rotate(-180deg) scale(1.1);
-        }
-        100% {
-            transform: translate(-50%, -50%) rotate(360deg) translateX(250px)
-                rotate(-360deg) scale(1);
-        }
-    }
-
-    @keyframes orbit2 {
-        0% {
-            transform: translate(-50%, -50%) rotate(120deg) translateX(300px)
-                rotate(-120deg) scale(1);
-        }
-        50% {
-            transform: translate(-50%, -50%) rotate(300deg) translateX(300px)
-                rotate(-300deg) scale(0.95);
-        }
-        100% {
-            transform: translate(-50%, -50%) rotate(480deg) translateX(300px)
-                rotate(-480deg) scale(1);
-        }
-    }
-
-    @keyframes orbit3 {
-        0% {
-            transform: translate(-50%, -50%) rotate(240deg) translateX(200px)
-                rotate(-240deg) scale(1);
-        }
-        50% {
-            transform: translate(-50%, -50%) rotate(420deg) translateX(200px)
-                rotate(-420deg) scale(1.05);
-        }
-        100% {
-            transform: translate(-50%, -50%) rotate(600deg) translateX(200px)
-                rotate(-600deg) scale(1);
-        }
-    }
-
-    @keyframes orbit4 {
-        0% {
-            transform: translate(-50%, -50%) rotate(60deg) translateX(350px)
-                rotate(-60deg) scale(1);
-        }
-        50% {
-            transform: translate(-50%, -50%) rotate(240deg) translateX(350px)
-                rotate(-240deg) scale(1.08);
-        }
-        100% {
-            transform: translate(-50%, -50%) rotate(420deg) translateX(350px)
-                rotate(-420deg) scale(1);
-        }
-    }
-
-    @keyframes orbit5 {
-        0% {
-            transform: translate(-50%, -50%) rotate(180deg) translateX(180px)
-                rotate(-180deg) scale(1);
-        }
-        50% {
-            transform: translate(-50%, -50%) rotate(360deg) translateX(180px)
-                rotate(-360deg) scale(0.92);
-        }
-        100% {
-            transform: translate(-50%, -50%) rotate(540deg) translateX(180px)
-                rotate(-540deg) scale(1);
-        }
-    }
-</style>

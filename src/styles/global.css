@@ -8,6 +8,13 @@
     --font-jetbrains-mono: "Jetbrains Mono", monospace;
 }
 
+:root {
+    --link-accent: #0f766e;
+    --link-accent-hover: #115e59;
+    --link-accent-dark: #2dd4bf;
+    --link-accent-dark-hover: #5eead4;
+}
+
 code {
     font-family: var(--font-jetbrains-mono);
 }
