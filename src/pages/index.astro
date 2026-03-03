@@ -1,230 +1,198 @@
 ---
-import"../styles/global.css";
-import { getCollection } from"astro:content";
-import Banner from"../components/Banner.astro";
-import SEO from"../components/SEO.astro";
+import "../styles/global.css";
+import { getCollection } from "astro:content";
+import Banner from "../components/Banner.astro";
+import SEO from "../components/SEO.astro";
 
 const posts = await getCollection("blog");
 const sortedPosts = posts.sort(
- (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 ---
 
 <html lang="en">
- <head>
- <meta charset="utf-8" />
- <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
- <meta name="viewport" content="width=device-width" />
- <meta name="generator" content={Astro.generator} />
- <meta
- name="description"
- content="Chandram Dutta - Software Developer and Student"
- />
- <title>onlychan</title>
- <SEO
- title="Chandram Dutta | onlychan"
- description="Software developer and student. Senior at VIT, Vellore majoring in Electrical and Electronics Engineering."
- />
- <script>
- if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
- document.documentElement.classList.add("dark");
- }
- </script>
- </head>
- <body
- class="font-serif bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen relative overflow-x-hidden [&_a]:text-(--link-accent) [&_a:hover]:text-(--link-accent-hover) dark:[&_a]:text-(--link-accent-dark) dark:[&_a:hover]:text-(--link-accent-dark-hover)"
- >
- <!-- <Banner /> -->
- <div class="mx-auto max-w-4xl p-4 md:px-8 lg:px-12 relative z-10">
- <h1 class="font-bold text-4xl pb-4 font-instrument-serif">
- Chandram Dutta
- </h1>
- Hello,<br />
- I am a 21 years old software developer and student. I am currently a senior
- majoring in Electrical and Electronics Engineering at <a
-
- target="_blank"
- href="https://vit.ac.in/">VIT, Vellore</a
- >. I also work at
- <a target="_blank" href="https://adora-app.com/"
- >Adora</a
- > as a software developer intern. <br /><br />
- Here's a link to my <a
-
- target="_blank"
- href="https://links.onlychan.xyz/resume/">Resume</a
- > & my <a
-
- target="_blank"
- href="https://links.onlychan.xyz/cv/">CV</a
- >.<br /><br />
- You can contact me on <a
-
- target="_blank"
- href="https://links.onlychan.xyz/x">X</a
- >, <a
-
- target="_blank"
- href="https://links.onlychan.xyz/github">GitHub</a
- >, <a
-
- target="_blank"
- href="https://links.onlychan.xyz/instagram">Instagram</a
- >, <a
-
- target="_blank"
- href="https://links.onlychan.xyz/linkedin">LinkedIn</a
- > & <a
-
- target="_blank"
- href="mailto:chandramdutta2004@gmail.com">Email</a
- >.
- <br /><br />
- I have published a few research articles:
- <ul class="list-disc pl-6">
- <li>
- <a
-
- target="_blank"
- href="https://ieeexplore.ieee.org/abstract/document/10434850"
- >
- Programmable Wireless Adapter for Commercial Electric
- Drives and Multifunction Meters</a
- > at 2023 Innovations in Power and Advanced Computing Technologies
- (i-PACT)
- </li>
- <li>
- <a
-
- target="_blank"
- href="https://link.springer.com/article/10.1007/s11220-024-00499-w"
- >Device to Measure Respiratory Rate in Children, in
- Resource Poor Settings</a
- > in Springer US
- </li>
- <li>
- <a
-
- target="_blank"
- href="https://www.sciencedirect.com/science/article/pii/S2468067226000039"
- >CAN-DAQ: An open-source, cost-effective data capture
- device and software for automotive research</a
- > in HardwareX by Elsevier
- </li>
- </ul>
- Here's my <a
-
- target="_blank"
- href="https://links.onlychan.xyz/gscholar">Google Scholar</a
- > Profile.<br /><br />
- I have created a few fun projects over the years like
- <ul class="list-disc pl-6">
- <li>
- <a
-
- target="_blank"
- href="https://github.com/Chandram-Dutta/Iris">Iris</a
- > which is a minimal 2D Game Engine written in Swift
- </li>
- <li>
- <a
-
- target="_blank"
- href="https://github.com/Chandram-Dutta/hyena_dart"
- >Hyena Dart</a
- > is a powerful Flutter/Dart codebase analyzer that detects dead
- code and calculates code complexity metrics
- </li>
- <li>
- <a
-
- target="_blank"
- href="https://github.com/Chandram-Dutta/flutter_icon_browser"
- >Flutter Icon Browser</a
- > which helps you find icons for your flutter projects across
- 5 different icon packages.
- </li>
- <li>
- <a
-
- target="_blank"
- href="https://github.com/Chandram-Dutta/step">Step</a
- >
- which was my winning submission for <b
- >2024 Apple Swift Student Challenge</b
- >. It lets you load and play multiple stems simultaneously
- to craft your own music.
- </li>
- <li>
- <a
-
- target="_blank"
- href="https://github.com/GDGVIT/vitty-ios">VITTY iOS</a
- > which lets VIT Students take a quick gander at your schedule
- for the day, see what class you have next and where you need to
- be!
- </li>
- <li>
- <a
-
- target="_blank"
- href="https://github.com/suzisuzisuzi">SUZI</a
- > which was our submission for GDSC Solutions Challenge 2024.
- It is an app that logs and creates actionable data on needy children
- and poor sanitation, helping NGOs and government bodies identify
- and address community needs.
- </li>
- <li>
- A
- <a
-
- target="_blank"
- href="https://github.com/Chandram-Dutta/dns_resolver_rs"
- >DNS Resolver</a
- > from scratch in Rust
- </li>
- <li>
- <a
-
- target="_blank"
- href="https://soundcrowd.dscvit.com/">SoundCrowd</a
- > which is a dynamic platform for hackathons and events to create
- collaborative playlists. It enables participants to contribute
- songs to a shared playlist while maintaining control over the
- approval of songs for their event playlists.
- </li>
- <li>
- <a
-
- target="_blank"
- href="https://github.com/Chandram-Dutta/sassci"
- >Sassci</a
- > which is a pretty tiny CLI written in Swift that lets you convert
- your images to ASCII art.
- </li>
- </ul>
- <br />
- I also write sometimes:
- <ul class="list-disc pl-6">
- {
- sortedPosts.map((post) => (
- <li>
- <a href={`/blog/${post.id}/`}>
- {post.data.title}
- </a>
- <span class="opacity-60 text-sm">
- {""}
- —{""}
- {post.data.pubDate.toLocaleDateString("en-US", {
- year:"numeric",
- month:"short",
- day:"numeric",
- })}
- </span>
- </li>
- ))
- }
- </ul>
- </div>
- </body>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <meta
+            name="description"
+            content="Chandram Dutta - Software Developer and Student"
+        />
+        <title>onlychan</title>
+        <SEO
+            title="Chandram Dutta | onlychan"
+            description="Software developer and student. Senior at VIT, Vellore majoring in Electrical and Electronics Engineering."
+        />
+        <script>
+            if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                document.documentElement.classList.add("dark");
+            }
+        </script>
+    </head>
+    <body
+        class="font-serif bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen relative overflow-x-hidden [&_a]:text-(--link-accent) [&_a:hover]:text-(--link-accent-hover) dark:[&_a]:text-(--link-accent-dark) dark:[&_a:hover]:text-(--link-accent-dark-hover)"
+    >
+        <!-- <Banner /> -->
+        <div class="mx-auto max-w-4xl p-4 md:px-8 lg:px-12 relative z-10">
+            <h1 class="font-bold text-4xl pb-4 font-instrument-serif">
+                Chandram Dutta
+            </h1>
+            Hello,<br />
+            I am a 21 years old software developer and student. I am currently a senior
+            majoring in Electrical and Electronics Engineering at <a
+                target="_blank"
+                href="https://vit.ac.in/">VIT, Vellore</a
+            >. I also work at
+            <a target="_blank" href="https://adora-app.com/">Adora</a> as a software
+            developer intern. <br /><br />
+            Here's a link to my <a
+                target="_blank"
+                href="https://links.onlychan.xyz/resume/">Resume</a
+            > & my <a target="_blank" href="https://links.onlychan.xyz/cv/"
+                >CV</a
+            >.<br /><br />
+            You can contact me on <a
+                target="_blank"
+                href="https://links.onlychan.xyz/x">X</a
+            >, <a target="_blank" href="https://links.onlychan.xyz/github"
+                >GitHub</a
+            >, <a target="_blank" href="https://links.onlychan.xyz/instagram"
+                >Instagram</a
+            >, <a target="_blank" href="https://links.onlychan.xyz/linkedin"
+                >LinkedIn</a
+            > & <a target="_blank" href="mailto:chandramdutta2004@gmail.com"
+                >Email</a
+            >.
+            <br /><br />
+            I have published a few research articles:
+            <ul class="list-disc pl-6">
+                <li>
+                    <a
+                        target="_blank"
+                        href="https://ieeexplore.ieee.org/abstract/document/10434850"
+                    >
+                        Programmable Wireless Adapter for Commercial Electric
+                        Drives and Multifunction Meters</a
+                    > at 2023 Innovations in Power and Advanced Computing Technologies
+                    (i-PACT)
+                </li>
+                <li>
+                    <a
+                        target="_blank"
+                        href="https://link.springer.com/article/10.1007/s11220-024-00499-w"
+                        >Device to Measure Respiratory Rate in Children, in
+                        Resource Poor Settings</a
+                    > in Springer US
+                </li>
+                <li>
+                    <a
+                        target="_blank"
+                        href="https://www.sciencedirect.com/science/article/pii/S2468067226000039"
+                        >CAN-DAQ: An open-source, cost-effective data capture
+                        device and software for automotive research</a
+                    > in HardwareX by Elsevier
+                </li>
+            </ul>
+            Here's my <a
+                target="_blank"
+                href="https://links.onlychan.xyz/gscholar">Google Scholar</a
+            > Profile.<br /><br />
+            I have created a few fun projects over the years like
+            <ul class="list-disc pl-6">
+                <li>
+                    <a
+                        target="_blank"
+                        href="https://github.com/Chandram-Dutta/Iris">Iris</a
+                    > which is a minimal 2D Game Engine written in Swift
+                </li>
+                <li>
+                    <a
+                        target="_blank"
+                        href="https://github.com/Chandram-Dutta/hyena_dart"
+                        >Hyena Dart</a
+                    > is a powerful Flutter/Dart codebase analyzer that detects dead
+                    code and calculates code complexity metrics
+                </li>
+                <li>
+                    <a
+                        target="_blank"
+                        href="https://github.com/Chandram-Dutta/flutter_icon_browser"
+                        >Flutter Icon Browser</a
+                    > which helps you find icons for your flutter projects across
+                    5 different icon packages.
+                </li>
+                <li>
+                    <a
+                        target="_blank"
+                        href="https://github.com/Chandram-Dutta/step">Step</a
+                    >
+                    which was my winning submission for <b
+                        >2024 Apple Swift Student Challenge</b
+                    >. It lets you load and play multiple stems simultaneously
+                    to craft your own music.
+                </li>
+                <li>
+                    <a
+                        target="_blank"
+                        href="https://github.com/GDGVIT/vitty-ios">VITTY iOS</a
+                    > which lets VIT Students take a quick gander at your schedule
+                    for the day, see what class you have next and where you need to
+                    be!
+                </li>
+                <li>
+                    <a target="_blank" href="https://github.com/suzisuzisuzi"
+                        >SUZI</a
+                    > which was our submission for GDSC Solutions Challenge 2024.
+                    It is an app that logs and creates actionable data on needy children
+                    and poor sanitation, helping NGOs and government bodies identify
+                    and address community needs.
+                </li>
+                <li>
+                    A
+                    <a
+                        target="_blank"
+                        href="https://github.com/Chandram-Dutta/dns_resolver_rs"
+                        >DNS Resolver</a
+                    > from scratch in Rust
+                </li>
+                <li>
+                    <a target="_blank" href="https://soundcrowd.dscvit.com/"
+                        >SoundCrowd</a
+                    > which is a dynamic platform for hackathons and events to create
+                    collaborative playlists. It enables participants to contribute
+                    songs to a shared playlist while maintaining control over the
+                    approval of songs for their event playlists.
+                </li>
+                <li>
+                    <a
+                        target="_blank"
+                        href="https://github.com/Chandram-Dutta/sassci"
+                        >Sassci</a
+                    > which is a pretty tiny CLI written in Swift that lets you convert
+                    your images to ASCII art.
+                </li>
+            </ul>
+            <br />
+            I also write sometimes:
+            <ul class="list-disc pl-6">
+                {
+                    sortedPosts.map((post) => (
+                        <li>
+                            <a href={`/blog/${post.id}/`}>{post.data.title}</a>
+                            <span class="opacity-60 text-sm">
+                                {""}—{""}
+                                {post.data.pubDate.toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "short",
+                                    day: "numeric",
+                                })}
+                            </span>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+    </body>
 </html>
