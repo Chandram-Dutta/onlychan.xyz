@@ -1,0 +1,50 @@
+---
+title: "Reggit 01"
+description: "Reggit is my experiment in building a git compatible version control system using Rust."
+pubDate: 2026-05-23
+tags: ["git", "rust", "vcs", "reggit"]
+---
+
+# About Reggit
+
+Reggit is a version control system that aims to be compatible with Git built using Rust as an experiment.
+Over the next few months, I'll try building it from scratch to understand the inner workings of Git and get a good understanding of Rust
+as a programming language. I will share updates here frequently on my learnings and the project.
+
+## Understanding Git's Object Store
+Git is essentially a content-addressable key-value database hidden inside a hidden `.git` directory. The "key" is a 40-character SHA-1 hash, and the "value" is compressed data.
+
+There are three primary types of object:
+- **Blob**: Raw contents of a file. It doesn't have information about its filename or directory. 
+- **Tree**: It matches the SHA-1 hashes of the blob or other trees to their actual filenames. 
+- **Commit**: A small text file containing the SHA-1 of the root tree and other metadata such as the author, date, and commit message.
+
+## Init
+
+My first step is to setup the structure that git expects using the `init` command
+the `reggit init` command should mimic `git init` which
+- creates a `.git` folder
+- create a `objects/` directory inside the `.git` folder
+- create a `refs/heads/` directory inside the `.git` folder
+- and a text file called `HEAD` inside the `.git` folder that contains ref: `refs/heads/main\n`
+
+`HEAD` file contains the reference to the default branch (`refs/heads/main` in this case).
+
+## Rust
+We can use Rust's standard filesystem APIs `std::fs` and path APIs from `std::path` to interact with the filesystem.
+
+```rust
+use std::{fs, io, path::Path};
+
+fn init_repo(repo_path: impl AsRef<Path>) -> io::Result<()> {
+    let git_dir = repo_path.as_ref().join(".git");
+
+    fs::create_dir_all(git_dir.join("objects"))?;
+    fs::create_dir_all(git_dir.join("refs").join("heads"))?;
+    fs::write(git_dir.join("HEAD"), "ref: refs/heads/main\n")?;
+
+    Ok(())
+}
+```
+
+I am using [clap](https://docs.rs/clap/latest/clap/) to parse command line arguments. The full code is on [github.com](https://github.com/Chandram-Dutta/reggit).
