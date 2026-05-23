@@ -1,0 +1,36 @@
+---
+interface Props {
+    source?: string;
+    sourceUrl?: string;
+}
+
+const { source, sourceUrl } = Astro.props;
+---
+
+<figure
+    class="special-quote my-4 rounded-xl border border-teal-200/80 bg-teal-50/80 p-2 dark:border-teal-900/80 dark:bg-teal-950/30"
+>
+    <blockquote
+        class="m-0 text-base leading-relaxed italic text-neutral-800 dark:text-neutral-100"
+    >
+        <slot />
+    </blockquote>
+    {
+        source && (
+            <figcaption class="mt-3 text-sm not-italic text-neutral-600 dark:text-neutral-300">
+                {sourceUrl ? (
+                    <a
+                        href={sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="font-medium no-underline hover:underline"
+                    >
+                        {source}
+                    </a>
+                ) : (
+                    <span class="font-medium">{source}</span>
+                )}
+            </figcaption>
+        )
+    }
+</figure>

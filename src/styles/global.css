@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Jetbrains+Mono:wght@400;500;600&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap");
 @import "tailwindcss";
+@import "katex/dist/katex.min.css";
 @plugin "@tailwindcss/typography";
 
 @theme {

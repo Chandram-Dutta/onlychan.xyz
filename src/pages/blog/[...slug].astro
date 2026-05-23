@@ -1,14 +1,15 @@
 ---
-import { getCollection, render } from"astro:content";
-import"../../styles/global.css";
-import SEO from"../../components/SEO.astro";
+import { getCollection, render } from "astro:content";
+import "../../styles/global.css";
+import SEO from "../../components/SEO.astro";
+import SpecialQuote from "../../components/SpecialQuote.astro";
 
 export async function getStaticPaths() {
- const posts = await getCollection("blog");
- return posts.map((post) => ({
- params: { slug: post.id },
- props: { post },
- }));
+    const posts = await getCollection("blog");
+    return posts.map((post) => ({
+        params: { slug: post.id },
+        props: { post },
+    }));
 }
 
 const { post } = Astro.props;
@@ -16,78 +17,76 @@ const { Content } = await render(post);
 ---
 
 <html lang="en">
- <head>
- <meta charset="utf-8" />
- <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
- <meta name="viewport" content="width=device-width" />
- <meta name="generator" content={Astro.generator} />
- <meta name="description" content={post.data.description} />
- <title>{post.data.title} | onlychan</title>
- <SEO
- title={`${post.data.title} | onlychan`}
- description={post.data.description}
- image={post.data.image}
- slug={post.id}
- type="article"
- />
- <script>
- if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
- document.documentElement.classList.add("dark");
- }
- </script>
- </head>
- <body
- class="font-serif bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen relative overflow-x-hidden [&_a]:text-(--link-accent) [&_a:hover]:text-(--link-accent-hover) dark:[&_a]:text-(--link-accent-dark) dark:[&_a:hover]:text-(--link-accent-dark-hover)"
- >
- <div class="mx-auto max-w-4xl p-4 md:px-8 lg:px-12 relative z-10">
- <a href="/blog" class="text-sm opacity-70"
- >← all posts</a
- >
- <article class="pt-4">
- <header
- class="pb-6 border-b border-neutral-200 dark:border-neutral-800"
- >
- <h1
- class="font-bold text-3xl md:text-4xl font-instrument-serif"
- >
- {post.data.title}
- </h1>
- <p class="text-sm opacity-60 mt-2">
- {
- post.data.pubDate.toLocaleDateString("en-US", {
- year:"numeric",
- month:"long",
- day:"numeric",
- })
- }
- </p>
- <div class="flex gap-2 mt-3 flex-wrap">
- {
- post.data.tags.map((tag) => (
- <span class="text-xs px-2 py-0.5 bg-neutral-200 dark:bg-neutral-800 rounded">
- {tag}
- </span>
- ))
- }
- </div>
- </header>
- <div
- class="prose prose-neutral dark:prose-invert max-w-none pt-6
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <meta name="description" content={post.data.description} />
+        <title>{post.data.title} | onlychan</title>
+        <SEO
+            title={`${post.data.title} | onlychan`}
+            description={post.data.description}
+            image={post.data.image}
+            slug={post.id}
+            type="article"
+        />
+        <script>
+            if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                document.documentElement.classList.add("dark");
+            }
+        </script>
+    </head>
+    <body
+        class="font-serif bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen relative overflow-x-hidden [&_a]:text-(--link-accent) [&_a:hover]:text-(--link-accent-hover) dark:[&_a]:text-(--link-accent-dark) dark:[&_a:hover]:text-(--link-accent-dark-hover)"
+    >
+        <div class="mx-auto max-w-4xl p-4 md:px-8 lg:px-12 relative z-10">
+            <a href="/blog" class="text-sm opacity-70">← all posts</a>
+            <article class="pt-4">
+                <header
+                    class="pb-6 border-b border-neutral-200 dark:border-neutral-800"
+                >
+                    <h1
+                        class="font-bold text-3xl md:text-4xl font-instrument-serif"
+                    >
+                        {post.data.title}
+                    </h1>
+                    <p class="text-sm opacity-60 mt-2">
+                        {
+                            post.data.pubDate.toLocaleDateString("en-US", {
+                                year: "numeric",
+                                month: "long",
+                                day: "numeric",
+                            })
+                        }
+                    </p>
+                    <div class="flex gap-2 mt-3 flex-wrap">
+                        {
+                            post.data.tags.map((tag) => (
+                                <span class="text-xs px-2 py-0.5 bg-neutral-200 dark:bg-neutral-800 rounded">
+                                    {tag}
+                                </span>
+                            ))
+                        }
+                    </div>
+                </header>
+                <div
+                    class="prose prose-neutral dark:prose-invert max-w-none pt-6
  prose-headings:font-instrument-serif prose-headings:font-bold
  prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg
   prose-li:my-1
  prose-p:leading-relaxed"
- >
- <Content />
- </div>
- </article>
- </div>
- </body>
+                >
+                    <Content components={{ SpecialQuote }} />
+                </div>
+            </article>
+        </div>
+    </body>
 </html>
 
 <style>
- :global(.prose code::before),
- :global(.prose code::after) {
- content: none !important;
- }
+    :global(.prose code::before),
+    :global(.prose code::after) {
+        content: none !important;
+    }
 </style>
