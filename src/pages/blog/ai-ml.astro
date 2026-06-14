@@ -1,0 +1,110 @@
+---
+import { getCollection } from "astro:content";
+import "../../styles/global.css";
+import SEO from "../../components/SEO.astro";
+
+const aiMlTags = new Set([
+    "ai",
+    "ml",
+    "ai/ml",
+    "ai-ml",
+    "artificial intelligence",
+    "machine learning",
+    "deep learning",
+    "llm",
+    "llms",
+    "nlp",
+    "computer vision",
+    "neural networks",
+]);
+
+const isAiMlPost = (tags: string[]) =>
+    tags.some((tag) => aiMlTags.has(tag.trim().toLowerCase()));
+
+const posts = await getCollection("blog");
+const aiMlPosts = posts
+    .filter((post) => isAiMlPost(post.data.tags))
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <meta
+            name="description"
+            content="AI and machine learning related blog posts by Chandram Dutta."
+        />
+        <title>AI/ML blog | onlychan</title>
+        <SEO
+            title="AI/ML blog | onlychan"
+            description="AI and machine learning related blog posts by Chandram Dutta."
+            slug="blog-ai-ml"
+        />
+        <script>
+            if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+                document.documentElement.classList.add("dark");
+            }
+        </script>
+    </head>
+    <body
+        class="font-serif bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen relative overflow-x-hidden [&_a]:text-(--link-accent) [&_a:hover]:text-(--link-accent-hover) dark:[&_a]:text-(--link-accent-dark) dark:[&_a:hover]:text-(--link-accent-dark-hover)"
+    >
+        <div class="mx-auto max-w-4xl p-4 md:px-8 lg:px-12 relative z-10">
+            <div class="flex gap-4 text-sm opacity-70">
+                <a href="/blog">← all posts</a>
+                <a href="/">home</a>
+            </div>
+            <h1 class="font-bold text-4xl pb-3 pt-2 font-instrument-serif">
+                AI/ML Blog
+            </h1>
+            <p class="opacity-80 pb-8">
+                Notes and posts related to artificial intelligence, machine learning,
+                LLMs, and related experiments.
+            </p>
+
+            <div class="space-y-8">
+                {
+                    aiMlPosts.map((post) => (
+                        <article class="group">
+                            <a href={`/blog/${post.id}/`} class="block">
+                                <h2 class="text-xl font-semibold">
+                                    {post.data.title}
+                                </h2>
+                                <p class="text-sm opacity-60 mt-1">
+                                    {post.data.pubDate.toLocaleDateString("en-US", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    })}
+                                </p>
+                                <p class="mt-2 opacity-80">
+                                    {post.data.description}
+                                </p>
+                                <div class="flex gap-2 mt-2 flex-wrap">
+                                    {post.data.tags.map((tag) => (
+                                        <span class="text-xs px-2 py-0.5 bg-neutral-200 dark:bg-neutral-800 rounded">
+                                            {tag}
+                                        </span>
+                                    ))}
+                                </div>
+                            </a>
+                        </article>
+                    ))
+                }
+            </div>
+
+            {
+                aiMlPosts.length === 0 && (
+                    <p class="opacity-60">
+                        No AI/ML posts yet. Add tags like <code>ai</code>,{" "}
+                        <code>ml</code>, <code>machine learning</code>, or{" "}
+                        <code>llm</code> to a blog post to show it here.
+                    </p>
+                )
+            }
+        </div>
+    </body>
+</html>

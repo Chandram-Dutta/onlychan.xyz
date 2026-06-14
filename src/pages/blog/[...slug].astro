@@ -36,6 +36,31 @@ const { Content } = await render(post);
                 document.documentElement.classList.add("dark");
             }
         </script>
+        <script>
+            import mermaid from "mermaid";
+
+            const isDark = document.documentElement.classList.contains("dark");
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: isDark ? "dark" : "default",
+            });
+
+            document.addEventListener("DOMContentLoaded", async () => {
+                const blocks = document.querySelectorAll(
+                    "pre[data-language='mermaid']",
+                );
+                let counter = 0;
+                for (const pre of blocks) {
+                    const diagram = pre.textContent ?? "";
+                    const id = `mermaid-${counter++}`;
+                    const { svg } = await mermaid.render(id, diagram);
+                    const wrapper = document.createElement("div");
+                    wrapper.className = "mermaid-diagram";
+                    wrapper.innerHTML = svg;
+                    pre.replaceWith(wrapper);
+                }
+            });
+        </script>
     </head>
     <body
         class="font-serif bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen relative overflow-x-hidden [&_a]:text-(--link-accent) [&_a:hover]:text-(--link-accent-hover) dark:[&_a]:text-(--link-accent-dark) dark:[&_a:hover]:text-(--link-accent-dark-hover)"
@@ -88,5 +113,25 @@ const { Content } = await render(post);
     :global(.prose code::before),
     :global(.prose code::after) {
         content: none !important;
+    }
+    :global(.prose .katex-display) {
+        text-align: center !important;
+    }
+    article {
+        padding-bottom: 5rem;
+    }
+    @media (min-width: 768px) {
+        article {
+            padding-bottom: 6rem;
+        }
+    }
+    :global(.mermaid-diagram) {
+        display: flex;
+        justify-content: center;
+        margin: 1.5rem 0;
+    }
+    :global(.mermaid-diagram svg) {
+        max-width: 100%;
+        height: auto;
     }
 </style>
