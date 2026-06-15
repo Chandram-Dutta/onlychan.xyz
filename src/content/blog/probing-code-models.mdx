@@ -1,6 +1,6 @@
 ---
 title: "How much does a code model know about what the code does?"
-description: "A progress report on a side project: I built a small pipeline to read the hidden states of code models, then probed four sizes of Qwen2.5-Coder. Scale makes them better at grammar and barely changes how well they track what a program does."
+description: "A progress report on a side project: I built a small pipeline to read the hidden states of code models, then probed four sizes of Qwen2.5-Coder. Scale makes them settle the grammar earlier in the network and barely changes how well they track what a program does."
 pubDate: "2026-06-14"
 tags: ["interpretability", "llms", "code"]
 ---
@@ -18,9 +18,8 @@ So I stopped asking the big question and picked a smaller one I could measure:
 > While a code model reads a program, what information is sitting in its hidden states? Just the
 > surface text? The grammar? Or something about what happens when you run the program?
 
-The rest of this post is two things at once. It's a recap of what I found, and it's a tour of what I
-had to build to find it, because most of the work was building. I'll go in the order the problems
-actually came up.
+This post covers what I found and what I had to build to find it. Most of the work was the building,
+so I'll go in roughly the order the problems came up.
 
 ## Three things a model might know
 
@@ -36,8 +35,8 @@ A model could be holding any of these in its head when it reads that line:
    pattern.
 2. **The grammar.** This is an assignment. `a + b` is an expression. The line lives inside some
    block, maybe a loop, maybe an `if`. This is what a parser knows.
-3. **What actually happens.** Did this line even run? Which branch was taken to get here? Is it
-   inside a loop that repeats? You only know this by running the program.
+3. **What actually happens.** Did this line even run? Which branch was taken to get here? What value
+   does a variable hold at this point? You only know this by running the program.
 
 A decent code model probably has some of all three. The questions worth asking are *which* one,
 *where* in the network it shows up, and whether the model worked it out or just read it off the
@@ -50,7 +49,7 @@ To ask "does the model know whether this line ran?", I first need to know whethe
 from GitHub doesn't come with that label, and it drags in files, network calls, and libraries that
 make the answer depend on things outside the snippet.
 
-So I generate the programs myself and run every one of them. They're deliberately plain: integer
+So I generate the programs myself, 150 of them, and run every one. They're deliberately plain: integer
 variables, assignment, `if`/`else`, `for`, and `while`. The `while` loops count down to zero so
 nothing runs forever. A typical one:
 
@@ -91,9 +90,9 @@ flowchart LR
 
 ## Reading the hidden states: probing
 
-A transformer doesn't keep one vector per token. It keeps one *per layer*. After the embedding
-(call it layer 0), then after layer 1, layer 2, and so on, each token has its own vector. People call
-this running representation the residual stream.
+A transformer keeps a separate vector for every token at every layer: after the embedding (call it
+layer 0), then after layer 1, layer 2, and so on. People call this running representation the residual
+stream.
 
 The method is probing, an idea borrowed from NLP interpretability
 ([Hewitt and Manning](https://aclanthology.org/N19-1419/) used it to read parse trees out of BERT).
@@ -160,177 +159,178 @@ experiment run cleanly across a 14× range of sizes.
 
 ## First result: grammar early, behaviour late
 
-Here's the 0.5B model, every property, on the full token set. "Layer 0" is the embedding baseline and
+Here's the 0.5B model, every property, on the 150 programs (about 41k tokens, 17k of them
+identifiers, which is what most of the probes run on). "Layer 0" is the embedding baseline and
 "lift" is the gain over it.
 
 | property | kind | best acc | layer 0 | lift |
 |---|---|---|---|---|
 | token type | text (control) | 1.000 | 0.905 | +0.095 |
-| block nesting depth | grammar | 0.979 | 0.467 | **+0.512** |
-| AST depth | grammar | 0.891 | 0.309 | **+0.582** |
-| in a repeating loop | behaviour | 0.847 | 0.667 | +0.180 |
-| did this line run | behaviour | 0.814 | 0.745 | +0.069 |
+| block nesting depth | grammar | 0.980 | 0.468 | **+0.512** |
+| AST depth | grammar | 0.891 | 0.307 | **+0.583** |
+| in a repeating loop | behaviour | 0.846 | 0.678 | +0.168 |
+| did this line run | behaviour | 0.812 | 0.754 | +0.058 |
 
-The same numbers as a curve, lift against how deep you are in the network:
+The grammar lifts are large, around half. The behaviour lifts are small, and they turned out to be
+misleading.
 
-![Lift over the embedding layer versus relative depth, for two grammar properties and two behaviour properties, on Qwen2.5-Coder-0.5B. The grammar curves rise fast and high; the behaviour curves stay low and peak later.](https://d3p2bvoe452d0z.cloudfront.net/fig1_depth_curves.png)
+This ordering is not new. [Tenney and colleagues](https://arxiv.org/abs/1905.05950) showed BERT runs
+the classical NLP pipeline in layer order, syntax before semantics, and for code the
+[AST is linearly recoverable](https://arxiv.org/abs/2206.11719) from a model's hidden states. So
+grammar early, behaviour late. The catch is that the behaviour half is not really behaviour.
 
-Read it left to right. The grammar properties shoot up in the first fifth of the network and stay
-high. The model figures out where it is in the block structure almost immediately, and there isn't
-much more to learn after that. The behaviour properties are different. They're much lower, and they
-keep climbing past the middle of the network. The model works out "did this run" and "is this in a
-loop" slowly, and never gets very confident about it.
+## Those behaviour numbers are a trap
 
-That's the shape I expected, and it's a familiar one. [Tenney and colleagues](https://arxiv.org/abs/1905.05950)
-showed BERT runs the classical NLP pipeline in layer order, syntax before semantics. For code, the
-[AST itself is known to be linearly recoverable](https://arxiv.org/abs/2206.11719) from a model's
-hidden states. So: grammar early, behaviour late. The size of the behaviour signal is small
-though, and that's where I almost got the story wrong.
+In these programs, whether a line runs is almost decided by *where it sits*. Top-level lines always
+run. Loop bodies always run, because the loops always go around at least once. The only way a line
+doesn't run is if it's inside an `if`/`else` branch that wasn't taken:
 
-## The signal that was nearly a mirage
-
-Look at "did this line run" again. At the embedding it sits right at the majority rate (guess "yes"
-and you're usually right, because most lines do run). It climbs a few points above that deeper in. My
-first read was that this is clean: the signal isn't in the tokens, so the model must be computing it.
-
-Then I noticed the catch. In my generated programs, top-level lines always run, and loop bodies
-always run, because the loops always go around at least once. The *only* way a line doesn't run is if
-it's inside an `if`/`else` branch that wasn't taken. Counting over the tokens:
-
-| block nesting depth | share of lines that did NOT run |
+| block nesting depth | share of tokens whose line did NOT run |
 |---|---|
 | 0 (top level) | 0% |
-| 1 | 22.4% |
-| 2 | 39.7% |
+| 1 | 22.7% |
+| 2 | 41.4% |
 
-So "did this run" is almost decided by "how nested is this", and the model reads nesting depth nearly
-perfectly. A probe could score well on "did this run" without tracking execution at all, just by
-reading the structure: top level, so it ran. And my embedding baseline doesn't save me, because
-nesting depth isn't in the tokens either. The model computes that too. The behaviour signal could
-just be grammar in a costume.
+So "did this line run" is mostly "how nested is this", and the model reads nesting depth nearly
+perfectly. "In a repeating loop" is worse. That label is really "is this token inside a loop body
+rather than a conditional body", which is pure grammar; tree-sitter hands it over for free. A probe
+can score on either label without tracking anything about execution, just by reading structure. The
+embedding baseline doesn't help, because the structure isn't in the raw tokens either, and the model
+computes it in the first few layers. The behaviour signal could just be grammar in disguise.
 
-(I didn't catch this myself the first time, but the lesson stuck: if a behaviour label
-lines up with some structure the model is good at, assume the structure is doing the work until you
-can show otherwise.)
+To check, I stripped the shortcut out. I kept only the tokens where execution is genuinely uncertain,
+the ones inside conditional branches, and held the nesting depth fixed so the structure can't hand
+over the answer. The "did this line run" signal drops to the noise floor, a point or two that doesn't
+reliably clear its own error bars. The "in a repeating loop" number mostly evaporates: once every
+token is already inside a loop, the probe can't tell the loop that ran twice from the one that ran
+once. Most of what looked like behaviour tracking was the model reading the layout.
 
-The test that settles it is to throw away the easy tokens. Keep only the tokens inside a branch,
-where whether the line ran is genuinely up in the air, and check whether the probe still beats the
-majority *computed on that harder subset*. If the signal was only structure, it should collapse. The
-effect is small, so I run each probe over five different splits and report the mean and standard
-deviation, and I only call something real if it clears two standard deviations:
+The general lesson: if a behaviour label lines up with some structure the model is good at, assume the
+structure is doing the work until you can show otherwise.
 
-$$
-\text{margin} > 2\sigma
-$$
+## A cleaner question: does it track the value?
 
-It holds up. On the 0.5B, branch tokens only:
+The fix isn't a better control on a bad label. It's a better label. So I asked the model something the
+grammar genuinely can't give away: what is the actual value of this variable, right here?
 
-| property (branch tokens only) | majority | probe | margin |
-|---|---|---|---|
-| did this line run | 0.679 | 0.752 ± 0.013 | **+0.073** |
-| in a repeating loop | 0.537 | 0.805 ± 0.011 | **+0.268** |
+I take each variable's traced value and bucket it to its sign (negative, zero, or positive), then ask
+a linear probe to read that off the hidden state. Nothing about the program's structure tells you
+whether `v3` is negative; you have to do the arithmetic. So if a simple probe recovers the sign, that's
+the model tracking the computation, not the layout. This is the same kind of program-state probe
+[Jin and Rinard](https://arxiv.org/abs/2305.11169) ran on grid-world programs, and the
+[Othello-GPT](https://arxiv.org/abs/2210.13382) board-state result before it.
 
-Even where the structure can't give the answer away, the model reads execution above chance, on every
-one of the five splits. It's small for "did this run" and much bigger for "in a repeating loop", but
-both are real. So there is a genuine bit of behaviour tracking in there, not just grammar. The next
-question was whether a bigger model has more of it.
+This one survives. On the 0.5B the embedding already scores about 0.65, because variable names leak a
+little sign (counters and loop variables are never negative). A probe in the early layers pulls that up
+to 0.73, a lift of about **+0.085**, steady across five train/test splits and well clear of the noise.
+So the model is tracking variable state. Not strongly, but it's there. The next question was whether a
+bigger model tracks it better.
 
-## Scaling: grammar gets sharper, behaviour doesn't
+Here's the 0.5B picture: lift over the embedding against depth in the network, for the two grammar
+properties and the value-sign probe.
 
-I ran the exact same pipeline on four sizes of Qwen2.5-Coder: 0.5B, 1.5B, 3B, and 7B. One thing to
-get out of the way first. These models aren't all the same depth (24, 28, 36, and 28 layers), and the
-7B is actually shallower than the 3B. So to compare *where* a property resolves, I use relative depth,
-the peak layer divided by the total:
+![Lift over the embedding versus relative depth on Qwen2.5-Coder-0.5B: two grammar properties (block nesting depth, AST depth) and the variable value-sign probe. The grammar curves rise fast to about +0.5 in the first fifth of the network; the value-sign curve rises early to a faint +0.085 and stays there.](https://d3p2bvoe452d0z.cloudfront.net/fig1_depth_curves.png)
+
+The grammar curves shoot up in the first fifth of the network and stay high. The model works out where
+it sits in the block structure almost immediately. The value-sign curve has the same early-rising shape
+but is much smaller. It lifts in the first few layers, tops out around +0.085 (a fraction of the grammar
+lift), and flattens. The model computes a little about the values, fast, and then stops.
+
+## Scaling: grammar resolves earlier, the value signal doesn't move
+
+I ran the same pipeline on four sizes of Qwen2.5-Coder: 0.5B, 1.5B, 3B, and 7B. One thing first: they
+aren't all the same depth (24, 28, 36, and 28 layers), and the 7B is actually shallower than the 3B.
+So to compare *where* a property resolves, I use relative depth, the peak layer over the total:
 
 $$
 d = \ell^\star / L
 $$
 
-![Two panels. Left: the relative depth where each property peaks, across the four model sizes. The grammar peaks drop toward the front of the network as size grows, while the execution peak drifts later. Right: the confound-controlled execution margin across sizes, flat within error bars.](https://d3p2bvoe452d0z.cloudfront.net/fig2_scaling.png)
-
-Grammar does two clean things as the model grows. It gets sharper, and it moves to the front.
-Nesting depth goes from 0.979 accuracy at 0.5B to a flat 1.000 by 3B, and the layer where it peaks
-slides from about a third of the way into the network down to the first tenth.
+The clean thing grammar does as the model grows is move to the front. Block-nesting depth is already
+decoded almost perfectly at every size, 0.98 to 1.00, so there isn't much room to get better, and AST
+depth even dips at 1.5B before recovering, so I wouldn't read an accuracy trend into it. What does
+change cleanly is where the grammar resolves. The peak slides from about a third of the way into the
+network at 0.5B to the first tenth by 3B.
 
 | property | size | best acc | lift | peak depth |
 |---|---|---|---|---|
-| block nesting depth | 0.5B | 0.979 | +0.512 | 0.38 |
-| | 1.5B | 0.990 | +0.522 | 0.11 |
+| block nesting depth | 0.5B | 0.980 | +0.512 | 0.38 |
+| | 1.5B | 0.990 | +0.523 | 0.11 |
 | | 3B | 1.000 | +0.533 | 0.08 |
-| | 7B | 0.998 | +0.530 | 0.11 |
-| AST depth | 0.5B | 0.891 | +0.582 | 0.38 |
-| | 1.5B | 0.865 | +0.560 | 0.29 |
-| | 3B | 0.920 | +0.612 | 0.08 |
-| | 7B | 0.916 | +0.608 | 0.11 |
+| | 7B | 0.998 | +0.531 | 0.11 |
+| AST depth | 0.5B | 0.891 | +0.583 | 0.38 |
+| | 1.5B | 0.865 | +0.558 | 0.07 |
+| | 3B | 0.921 | +0.614 | 0.08 |
+| | 7B | 0.919 | +0.610 | 0.11 |
 
-Bigger models know the grammar better. They also lock it in sooner, then spend the rest of their
-depth on something else.
+Bigger models lock the grammar in sooner, then spend the rest of their depth on something else.
 
-Behaviour is the opposite story, and it's the part I find interesting. Here's the confound-controlled
-margin (branch tokens only, five splits) across all four sizes:
+(One caveat on this table: the grammar accuracies are single-split point estimates, not 5-seed like
+the semantic numbers below, so I wouldn't lean on differences in the third decimal. The peak-depth
+shift is the part that's large and consistent enough to trust.)
 
-| property | size | majority | probe | margin |
+The value signal does the opposite of what you'd hope: it stays flat. Here's the value-sign lift over
+the embedding across the four sizes:
+
+| property | 0.5B | 1.5B | 3B | 7B |
 |---|---|---|---|---|
-| did this line run | 0.5B | 0.679 | 0.752 ± 0.013 | +0.073 |
-| | 1.5B | 0.678 | 0.725 ± 0.013 | +0.047 |
-| | 3B | 0.683 | 0.751 ± 0.013 | +0.069 |
-| | 7B | 0.671 | 0.748 ± 0.012 | +0.078 |
-| in a repeating loop | 0.5B | 0.537 | 0.805 ± 0.011 | +0.268 |
-| | 1.5B | 0.543 | 0.806 ± 0.008 | +0.263 |
-| | 3B | 0.532 | 0.799 ± 0.010 | +0.268 |
-| | 7B | 0.556 | 0.823 ± 0.015 | +0.267 |
+| value sign (lift over embedding) | +0.085 | +0.085 | +0.073 | +0.061 |
 
-Read the "did this line run" margin down the sizes: +0.073, +0.047, +0.069, +0.078. That's a flat
-line with some noise, across a 14× jump in parameters. The 1.5B is a little low, but there's no
-upward trend. The 7B is barely above the 0.5B. "In a repeating loop" is steadier and stronger, and it
-is *also* flat, landing within half a point of +0.27 every single time.
+Across a 14× jump in parameters the signal doesn't grow. The drop from 0.085 to 0.061 is within the
+error bars, so I read it as flat rather than declining. I also tried the branch-taken label, holding
+nesting depth fixed, but it sits at the noise floor: a few points that barely clear their own error
+bars and jump around with the random split, so I won't lean on it. Value-sign is the one execution
+signal clean enough to trust. Whatever the extra capacity is buying, it isn't a stronger linear grip on
+what the program is doing.
 
-One thing scale does change about execution: it pushes the signal a bit deeper. The layer where "did
-this line run" peaks drifts from about 0.46 of the way in at 0.5B to about 0.56 at 3B and 7B. (Quick
-note so I don't confuse two numbers that look similar: the +0.069 above is the *lift over the
-embedding* on the full token set, and the +0.073 in the table is the *confound-controlled margin* on
-branch tokens only. Same property, two different measurements.)
+![Two panels. Left: the relative depth where each property peaks across the four sizes; the grammar peaks slide toward the front of the network as the model grows. Right: the value-sign lift over the embedding across sizes, flat within error bars.](https://d3p2bvoe452d0z.cloudfront.net/fig2_scaling.png)
 
 ## What I think this means
 
-The honest summary is short. Scale buys better and earlier grammar. It does not buy stronger tracking
-of what the program does.
+Scale buys earlier grammar: the model settles it sooner, not more accurately. It doesn't buy a stronger
+linear grip on what the program does.
 
-That's not what I would have guessed. Tracking execution feels like the deep thing, the part you'd
-expect a bigger model to unlock. Instead the execution signal is already there at 0.5B, survives every
-check I throw at it, and then just sits there while the model grows. The extra capacity is clearly
-going somewhere. It just isn't going into a stronger linear "what runs" feature.
+That surprised me. Tracking the computation feels like the deep thing, the part a bigger model should
+unlock. Instead the value signal is already there at 0.5B, computed in the first few layers, and it
+stays about the same as the model grows 14×. The extra capacity is going somewhere. It isn't going into
+a stronger linear "what is this value" feature.
 
-This sits next to a couple of known results. That an execution signal exists at all lines up with
-[Jin and Rinard](https://arxiv.org/abs/2305.11169), who trained models on grid-world programs and
-found they build representations of program state, and with the
-[Othello-GPT](https://arxiv.org/abs/2210.13382) work, where a model trained only to predict legal
-moves turned out to carry a linear model of the board. The difference is the axis I'm varying. They
-watch a signal grow over *training*, in models built from scratch; I hold training fixed and vary
-model *size*. So "present but flat with scale" doesn't contradict "emerges over training" — they're
-different questions, and that's worth keeping straight before reading too much into a flat line.
+What holds up: the model does carry a little program state. The value-sign probe is small but steady at
+every size, which lines up with [Jin and Rinard](https://arxiv.org/abs/2305.11169), who found
+program-state representations in models trained on grid-world programs, and with the
+[Othello-GPT](https://arxiv.org/abs/2210.13382) board-state result. One difference is the axis. They
+watch a signal emerge over training in models built from scratch; I hold training fixed and vary size.
+So "present but flat with scale" doesn't contradict "emerges over training". What I won't claim is the
+bigger version of the story. The labels that looked like strong execution tracking, "did this line run"
+and "in a repeating loop", were mostly the model reading structure, and they fall apart once you control
+for it. The signal that survives is the quiet one: a small, structure-free trace of variable values that
+doesn't care how big the model is.
 
-A few caveats, because a result like this is easy to over-read:
+A few caveats, because this is easy to over-read:
 
-- **These are toy programs.** Small generated snippets over integers, no libraries, no real data
-  structures. The flat result might be a ceiling of the *task* rather than the *models*. There may
-  just be very little execution signal left to find in programs this easy.
-- **This is correlation, not use.** A probe shows the information is present. It does not show the
-  model uses it when it writes code. Those are different claims and probing only speaks to the first.
-- **It's one model family.** Everything here is Qwen2.5-Coder. Another family could behave
-  differently.
+- **These are toy programs.** Small integer snippets, no libraries, no real data structures. The flat
+  result might be a ceiling of the task rather than the models. There may be little value signal left to
+  find in programs this easy. This is the caveat I most want to kill next.
+- **This is correlation, not use.** A probe shows the information is present, not that the model uses
+  it when it writes code. Probing only speaks to the first.
+- **One family, linear probes.** Everything here is Qwen2.5-Coder, and a linear probe only sees what's
+  linearly available. Value tracking could be richer and non-linear, and I'd be undercounting it.
 
 ## What's next
 
-The probe has taken this about as far as it honestly can. It tells me the execution signal exists and
-how it scales, but not whether the model leans on it. The next step is to intervene: patch the
-"did this line run" direction in the residual stream (I'm planning to use
-[nnsight](https://nnsight.net/) for this) and see if the model's own output moves. If it does, then the model
-is actually using that information and not just storing it. That mirrors the interventional baseline
-Jin and Rinard used to tell apart what the model represents from what the probe just learned to read.
-After that, cross-language transfer: train the
-probe on Python, test it on Java or C++, and see whether any of this is shared structure or just
-Python surface.
+The probe says the value signal exists and stays flat. It can't say whether the model *uses* it. The
+next step is to intervene: patch the value direction in the residual stream (with
+[nnsight](https://nnsight.net/)) and see if the model's own output moves. If it does, the model is
+acting on that state, not just storing it. That mirrors the interventional check
+[Jin and Rinard](https://arxiv.org/abs/2305.11169) used to tell apart what the model represents from
+what the probe just learned to read.
+
+The bigger lever is the programs themselves. They're deliberately trivial, and the flat result might
+be the task running out of signal rather than the models running out of capacity. The plan is to make
+them harder while keeping the clean ground truth: more variables, and branch conditions that depend on
+computed values, so the model has to track state to get them right. Then, eventually, real code with
+supplied inputs. After that, cross-language transfer: train the probe on Python, test on Java or C++,
+and see whether any of this is shared structure or just Python surface.
 
 The code and the raw numbers are in a repo that I'll make public soon. This is the first write-up; more as the programs get less toy-like.
 
