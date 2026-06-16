@@ -5,7 +5,7 @@ pubDate: "2026-06-16"
 tags: ["interpretability", "llms", "code"]
 ---
 
-The last post left a hole in it. I probed four sizes of Qwen2.5-Coder and found that a small, linear
+The [last post](https://onlychan.xyz/blog/probing-code-models/) left a hole in it. I probed four sizes of Qwen2.5-Coder and found that a small, linear
 trace of a variable's sign sits in the hidden states, early, and barely changes as the model grows.
 Then I said the honest thing: a probe only shows the information is *there*. It can't tell you the
 model ever *uses* it. A probe reads the residual stream from the outside. The model might be doing the
@@ -16,7 +16,7 @@ So this post tries to tell those two apart.
 > The probe says the sign is present. The question now is whether the model reads its own
 > representation of the sign when it decides what to write next.
 
-The tool for this is activation patching: change one piece of the model's internal state mid-run and
+The tool for this is [activation patching](https://arxiv.org/abs/2404.15255): change one piece of the model's internal state mid-run and
 watch whether the output changes. If editing the sign flips what the model predicts, the model was
 using it. If nothing moves, the sign was a passenger.
 
@@ -40,7 +40,7 @@ result:
 The model has to predict what comes after that last line. If it worked out that `v2` is positive, it
 should write a digit. If it worked out `v2` is negative, it should write a minus sign first. So the
 first output token carries the sign, and I can read it straight off the logits: take the logit of `-`
-and the logit of the digits, and their difference is a number that's high when the model thinks the
+and the logit of the digits, and [their difference](https://arxiv.org/abs/2211.00593) is a number that's high when the model thinks the
 result is negative and low when it thinks it's positive.
 
 I tried an even simpler version first, asking the model `v2 > 0` and reading `True` or `False`. That
@@ -165,7 +165,7 @@ It does, everywhere, for the in-task direction.
 
 Two different ratios, so keep them apart. The in-task direction reproduces 91% to 100% of what the
 *whole-residual* patch does at the same spot, while a random direction of the same length does nothing.
-That's the linearity claim: the part of the sign the model acts on is a single axis at one token. But
+That's the linearity claim: the part of the sign the model acts on is a [single axis](https://arxiv.org/abs/2309.00941) at one token. But
 the whole-residual patch itself only moves about a third to two-thirds of the swing (it tops out around
 0.6, on the 3B), so this one token is not the entire story of how the model answers; the rest is spread
 across other positions or done at the output. The piece that's here is clean and linear. Hold the
@@ -245,3 +245,12 @@ more of the network and might line the two up.
 
 After that, the thing I keep putting off: cross-language. Train the read-out on Python, test it on Java
 or C++, and see whether the place the model parks a value's sign is shared structure or just Python.
+
+## References
+
+- Kevin Meng, David Bau, Alex Andonian, Yonatan Belinkov. [Locating and Editing Factual Associations in GPT](https://arxiv.org/abs/2202.05262). NeurIPS 2022.
+- Kevin Wang, Alexandre Variengien, Arthur Conmy, Buck Shlegeris, Jacob Steinhardt. [Interpretability in the Wild: a Circuit for Indirect Object Identification in GPT-2 small](https://arxiv.org/abs/2211.00593). ICLR 2023.
+- Stefan Heimersheim, Neel Nanda. [How to use and interpret activation patching](https://arxiv.org/abs/2404.15255). arXiv 2024.
+- Neel Nanda, Andrew Lee, Martin Wattenberg. [Emergent Linear Representations in World Models of Self-Supervised Sequence Models](https://arxiv.org/abs/2309.00941). BlackboxNLP 2023.
+- Charles Jin, Martin Rinard. [Emergent Representations of Program Semantics in Language Models Trained on Programs](https://arxiv.org/abs/2305.11169). ICML 2024.
+- Kenneth Li, Aspen K. Hopkins, David Bau, Fernanda Viégas, Hanspeter Pfister, Martin Wattenberg. [Emergent World Representations: Exploring a Sequence Model Trained on a Synthetic Task](https://arxiv.org/abs/2210.13382). ICLR 2023.
