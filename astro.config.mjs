@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
+import react from "@astrojs/react";
 
 import mdx from "@astrojs/mdx";
 import { unified } from "@astrojs/markdown-remark";
@@ -18,7 +19,13 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    // tldraw + @astrojs/react pull in React 19's react-dom/client, whose named
+    // exports (createRoot/hydrateRoot) live behind `module.exports = require(...)`.
+    // Pre-bundling forces esbuild to expose them as real ESM named exports.
+    optimizeDeps: {
+      include: ["react", "react-dom", "react-dom/client", "react/jsx-runtime"],
+    },
   },
 
-  integrations: [mdx()],
+  integrations: [react(), mdx()],
 });

@@ -1,0 +1,68 @@
+---
+title: "Notes on 'A Mathematical Framework for Transformer Circuits'"
+description: "My notes and understanding based on Anthropic's 'A Mathematical Framework for Transformer Circuits' paper."
+pubDate: 2026-06-22
+tags: ["llms", "notes", "interpretability"]
+---
+
+Notes based on [Anthropic's 'A Mathematical Framework for Transformer Circuits'](https://transformer-circuits.pub/2021/framework/index.html)
+
+- Attempt to reverse engineer the detailed computations performed by transformers using mechanistic interpretability.
+- Aims to discover simple algorithmic patterns, motifs, or frameworks that can subsequently be applied to larger and more complex models.
+- Studies transformers with two layers or less which have only attention blocks.
+
+By conceptualizing the operations of transformers  mathematically, we can understand the model’s operations internally
+
+Specific attention heads called “induction heads” can explain in-context learning in these small models and that these heads only develop in models with at least two attention layers
+
+## High level architecture of the transformer used
+- Autoregressive, decoder-only transformer language model.
+<Tldraw src="https://d3p2bvoe452d0z.cloudfront.net/mfftc/mfftc_transformer_arch.tldr"/>
+
+## Residual Stream
+
+- Each layer adds to the residual stream
+- Its considered as a communication medium as it doesn’t do any processing
+- Its linear; Every layer performs an arbitrary linear transformation to "read in" information from the residual stream at the start and performs another arbitrary linear transformation before adding to "write" its output back into the residual stream.
+
+Mathematically the state of the residual stream at layer $i$ is the sum of all the previous layers
+$$
+x_i = x_{i-1} + f_i(x_{i-1})
+$$
+
+By the end of the network, the final residual stream is
+$$
+x_{\text{final}} = \text{Embedding} + \text{Layer}_1 + \text{Layer}_2 + \dots + \text{Layer}_N
+$$
+
+## QK and OV Circuits
+
+An attention head does two things that are mathematically independent.
+- The QK (Query-Key) Circuit: Decides where to move information from (the attention pattern).
+- The OV (Output-Value) Circuit: Decides what information to move to the destination.
+
+Instead of tracking $Q$, $K$, and $V$ vectors, we can multiply the weight matrices together to form two unified matrices:
+
+- A matrix that determines the attention scores between any two tokens.
+$$
+W_{QK} = W_{Q} \cdot W_{K}^T
+$$
+- A matrix that determines how a token's representation changes if it is attended to.
+$$
+W_{OV} = W_{V} \cdot W_{O}^T
+$$
+
+Because Transformers are heavily linear, we can multiply these matrices directly by the Embedding matrix ($W_E$) and Unembedding matrix ($W_U$) to see exactly what a head is doing end-to-end, without running data through the model.
+
+## Zero, One, and Two-Layer Models
+Because a model is treated as a sum of paths, we can simplify things by removing MLPs(Attention-Only Transformers) and analyse layer by layer.
+
+- Zero Layer (Just $W_E\times W_U$): This is just a Bigram model. It memorizes statistics like "If current token is 'Barack', the next is likely 'Obama'".
+- One-Layer: These models act as "Skip-Trigram" models. An attention head can look back at a previous token and use it to predict the next word (e.g., "[keep] ... in [mind]").
+- Two-Layer (Induction Heads): Two layers allow heads to compose. Head 1 looks at a token. Head 2 looks at what Head 1 did.
+
+Induction heads allows large language models to do "in-context learning".
+- Head A (Layer 1) attends to the previous token. It shifts information forward.
+- Head B (Layer 2) uses its QK circuit to search for the current token in the past. If it finds it, it looks at the next token (thanks to Head A's shifted information) and uses its OV circuit to predict that token again.
+
+In a following post, I'll try to program this!

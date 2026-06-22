@@ -1,0 +1,100 @@
+---
+import TldrawViewer from "./TldrawViewer.tsx";
+
+interface Props {
+    src: string;
+    title?: string;
+    height?: string;
+}
+
+const { src, title = "tldraw drawing", height = "500px" } = Astro.props;
+---
+
+<figure class="tldraw-embed my-4" style={`height:${height}`} aria-label={title}>
+    <TldrawViewer src={src} client:only="react" />
+    <button
+        type="button"
+        class="tldraw-expand"
+        aria-label="Expand drawing"
+        title="Expand"
+    >
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+        >
+            <path d="M15 3h6v6"></path>
+            <path d="M9 21H3v-6"></path>
+            <path d="M21 3l-7 7"></path>
+            <path d="M3 21l7-7"></path>
+        </svg>
+    </button>
+</figure>
+
+<style>
+    .tldraw-embed {
+        position: relative;
+        width: 100%;
+        margin-inline: 0;
+        overflow: hidden;
+        border-radius: 0.75rem;
+        border: 1px solid rgb(229 229 229);
+        background: rgb(250 250 250);
+    }
+    :global(.dark) .tldraw-embed {
+        border-color: rgb(38 38 38);
+        background: rgb(23 23 23);
+    }
+    .tldraw-expand {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        z-index: 10;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2rem;
+        height: 2rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgb(229 229 229);
+        background: rgba(255, 255, 255, 0.9);
+        color: rgb(64 64 64);
+        cursor: pointer;
+        backdrop-filter: blur(4px);
+        transition:
+            background 0.15s ease,
+            color 0.15s ease;
+    }
+    .tldraw-expand:hover {
+        background: rgb(255 255 255);
+        color: rgb(23 23 23);
+    }
+    :global(.dark) .tldraw-expand {
+        border-color: rgb(64 64 64);
+        background: rgba(23, 23, 23, 0.85);
+        color: rgb(212 212 212);
+    }
+    :global(.dark) .tldraw-expand:hover {
+        background: rgb(38 38 38);
+        color: rgb(245 245 245);
+    }
+    /* Hide the expand button when the figure itself is fullscreen */
+    .tldraw-embed:fullscreen .tldraw-expand,
+    .tldraw-embed:-webkit-full-screen .tldraw-expand {
+        display: none;
+    }
+    .tldraw-embed:fullscreen,
+    .tldraw-embed:-webkit-full-screen {
+        border-radius: 0;
+        border: none;
+        height: 100dvh !important;
+        width: 100dvw !important;
+    }
+</style>

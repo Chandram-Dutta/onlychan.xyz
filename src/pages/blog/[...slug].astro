@@ -3,6 +3,7 @@ import { getCollection, render } from "astro:content";
 import "../../styles/global.css";
 import SEO from "../../components/SEO.astro";
 import SpecialQuote from "../../components/SpecialQuote.astro";
+import Tldraw from "../../components/Tldraw.astro";
 
 export async function getStaticPaths() {
     const posts = await getCollection("blog");
@@ -61,6 +62,66 @@ const { Content } = await render(post);
                 }
             });
         </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", () => {
+                const overlay =
+                    document.getElementById("lightbox-overlay");
+                if (!overlay) return;
+                const stage = overlay.querySelector<HTMLDivElement>(
+                    ".lightbox-stage",
+                );
+                if (!stage) return;
+
+                const openWith = (node: HTMLElement) => {
+                    stage.replaceChildren(node);
+                    overlay.classList.add("open");
+                    document.body.style.overflow = "hidden";
+                };
+                const close = () => {
+                    overlay.classList.remove("open");
+                    stage.replaceChildren();
+                    document.body.style.overflow = "";
+                };
+
+                // tldraw expand buttons — use native Fullscreen API on the figure
+                document
+                    .querySelectorAll<HTMLButtonElement>(".tldraw-expand")
+                    .forEach((btn) => {
+                        btn.addEventListener("click", () => {
+                            const figure = btn.closest<HTMLElement>(".tldraw-embed");
+                            figure?.requestFullscreen?.();
+                        });
+                    });
+
+                // expandable images (skip ones wrapped in a link)
+                document
+                    .querySelectorAll<HTMLImageElement>(".prose img")
+                    .forEach((img) => {
+                        if (img.closest("a")) return;
+                        img.style.cursor = "zoom-in";
+                        img.addEventListener("click", () => {
+                            const full = document.createElement("img");
+                            full.src = img.currentSrc || img.src;
+                            full.alt = img.alt;
+                            full.className = "lightbox-img";
+                            openWith(full);
+                        });
+                    });
+
+                overlay.addEventListener("click", (e) => {
+                    if (
+                        e.target === overlay ||
+                        (e.target as HTMLElement).closest(".lightbox-close")
+                    ) {
+                        close();
+                    }
+                });
+                document.addEventListener("keydown", (e) => {
+                    if (e.key === "Escape" && overlay.classList.contains("open"))
+                        close();
+                });
+            });
+        </script>
     </head>
     <body
         class="font-serif bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 min-h-screen relative overflow-x-hidden [&_a]:text-(--link-accent) [&_a:hover]:text-(--link-accent-hover) dark:[&_a]:text-(--link-accent-dark) dark:[&_a:hover]:text-(--link-accent-dark-hover)"
@@ -102,9 +163,17 @@ const { Content } = await render(post);
   prose-li:my-1
  prose-p:leading-relaxed"
                 >
-                    <Content components={{ SpecialQuote }} />
+                    <Content components={{ SpecialQuote, Tldraw }} />
                 </div>
             </article>
+        </div>
+        <div id="lightbox-overlay" role="dialog" aria-modal="true">
+            <button
+                type="button"
+                class="lightbox-close"
+                aria-label="Close"
+                title="Close">&times;</button>
+            <div class="lightbox-stage"></div>
         </div>
     </body>
 </html>
@@ -133,5 +202,53 @@ const { Content } = await render(post);
     :global(.mermaid-diagram svg) {
         max-width: 100%;
         height: auto;
+    }
+    #lightbox-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(4px);
+    }
+    #lightbox-overlay.open {
+        display: flex;
+    }
+    .lightbox-stage {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    :global(.lightbox-img) {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+        border-radius: 0.5rem;
+        cursor: zoom-out;
+    }
+    .lightbox-close {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        line-height: 1;
+        color: #fff;
+        background: rgba(255, 255, 255, 0.12);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        border-radius: 9999px;
+        cursor: pointer;
+    }
+    .lightbox-close:hover {
+        background: rgba(255, 255, 255, 0.22);
     }
 </style>
