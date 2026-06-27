@@ -1,0 +1,14 @@
+---
+title: "Linear Probes add little for Verifiable Reward Hacking"
+description: "Linear probes achieve near-perfect AUC at detecting reward hacks but add almost nothing over simple output checks. An experiment with GRPO on Qwen2.5-0.5B shows the limits of mechanistic interpretability when hacks are easily verifiable from the output."
+pubDate: 2026-06-27
+tags: ["interpretability", "reward hacking", "reinforcement learning", "llms"]
+---
+
+# Introduction
+
+I wanted to see whether linear probes on a model's internal activations could give an early-warning for reward hacking during GRPO training. I trained Qwen2.5-0.5B on a simple synthetic mathematical benchmark with a planted loophole in the reward checker.
+
+As a result, the linear probes work very well at detecting reward hacking(near perfect AUC on held-out data), but adds almost nothing over checks on the model's output. The hack that appeared was just a bare copy of a value from the prompt which can be spotted immediately by just reading the completion. The probe doesn't give any extra value on top of looking at the model's output or running a quick regex during inference.
+
+This is not a failure of the probe but it shows a basic limit on verifiable reward tasks. The hacks that emerge under RL are often lazy and obvious ones. The more hidden or clever hacks (the kind where probes would be really useful) almost never get generated during training, so RL never gets a chance to reward and strengthen them.
