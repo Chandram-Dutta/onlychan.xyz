@@ -31,5 +31,13 @@ const {
         <main>
             <slot />
         </main>
+        {import.meta.env.PROD && (
+            <script
+                is:inline
+                type="module"
+                src="https://static.cloudflareinsights.com/beacon.min.js"
+                data-cf-beacon='{"token": "05709c9357f343738a741b11d7dba791"}'
+            ></script>
+        )}
     </body>
 </html>

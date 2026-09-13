@@ -19,6 +19,28 @@ bun --bun run build
 
 The static site is generated in `dist/`.
 
+## Cloudflare deployment
+
+The site is configured for Cloudflare Workers Static Assets at `onlychan.xyz`.
+The domain must be an active zone in the Cloudflare account used to deploy.
+
+Cloudflare Workers Builds deploys pushes to `main` from
+`Chandram-Dutta/onlychan.xyz`. Build settings: repository root `/`, Bun `1.4.2`
+(`BUN_VERSION`), build command `bun --bun run build`, and deploy command
+`bun --bun wrangler deploy`. Preview branch builds are disabled.
+
+For a manual deployment:
+
+```sh
+bun --bun wrangler login
+bun run deploy
+```
+
+Cloudflare Web Analytics is enabled for `onlychan.xyz` with **Enable with JS
+Snippet installation** selected in the dashboard. `SiteLayout.astro` includes
+the site's public beacon token on production builds. Keep automatic injection
+off to avoid duplicate tracking. Local development does not load the beacon.
+
 ## Blog
 
 Add Markdown or MDX posts to `src/content/blogs/` with `title`, `description`,

@@ -10,6 +10,7 @@ import rehypeBlog from "./src/lib/rehype-blog.mjs";
 
 // https://astro.build/config
 export default defineConfig({
+  site: "https://onlychan.xyz",
   integrations: [mdx()],
   markdown: {
     processor: unified({
