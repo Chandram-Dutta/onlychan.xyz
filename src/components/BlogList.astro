@@ -1,0 +1,29 @@
+---
+import type { CollectionEntry } from "astro:content";
+import PostDate from "./PostDate.astro";
+
+interface Props {
+    posts: CollectionEntry<"blogs">[];
+}
+
+const { posts } = Astro.props;
+---
+
+<ul class="space-y-6">
+    {posts.map((post) => (
+        <li>
+            <p class="mb-1 text-xs text-zinc-400">
+                <PostDate date={post.data.pubDate} />
+            </p>
+            <a
+                href={`/blog/${post.id}/`}
+                class="touch-target text-zinc-300 underline decoration-rose-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-rose-400 focus-visible:text-rose-400"
+            >
+                {post.data.title}
+            </a>
+            <p class="mt-1 line-clamp-3 text-sm leading-relaxed text-zinc-400">
+                {post.data.description}
+            </p>
+        </li>
+    ))}
+</ul>

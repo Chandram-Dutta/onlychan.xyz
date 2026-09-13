@@ -1,0 +1,23 @@
+---
+import BlogList from "../../components/BlogList.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { getBlogPosts } from "../../lib/blog";
+
+const posts = await getBlogPosts();
+---
+
+<SiteLayout
+    title="Blog · onlychan"
+    description="Notes and experiments on software, engineering, and machine learning by Chandram Dutta."
+>
+    <nav aria-label="Breadcrumb" class="mb-8">
+        <a href="/" class="blog-link touch-target">← Home</a>
+    </nav>
+    <header class="mb-8">
+        <h1 class="mb-3 text-2xl">Blog</h1>
+        <p class="text-sm leading-relaxed text-zinc-400">
+            Notes and experiments on software, engineering, and machine learning.
+        </p>
+    </header>
+    <BlogList posts={posts} />
+</SiteLayout>

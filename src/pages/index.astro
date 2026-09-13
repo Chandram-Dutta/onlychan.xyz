@@ -1,5 +1,9 @@
 ---
-import "../styles/global.css";
+import BlogList from "../components/BlogList.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { getBlogPosts } from "../lib/blog";
+
+const posts = await getBlogPosts();
 
 const projects = [
     {
@@ -80,22 +84,7 @@ const contactLinks = [
 ];
 ---
 
-<html lang="en" class="dark scheme-dark bg-zinc-850 font-mono text-zinc-100">
-    <head>
-        <meta charset="utf-8" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link
-            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100..800&display=swap"
-            rel="stylesheet"
-        />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="icon" href="/favicon.ico" />
-        <meta name="viewport" content="width=device-width" />
-        <meta name="generator" content={Astro.generator} />
-        <title>onlychan</title>
-    </head>
-    <body class="mx-auto min-h-screen max-w-3xl p-4 sm:p-6 lg:p-8 lg:pt-24">
+<SiteLayout>
         <h1 class="text-2xl mb-8">Chandram Dutta</h1>
         <p class="mb-8">
             Software Engineer at{" "}
@@ -184,6 +173,13 @@ const contactLinks = [
                 More on GitHub →
             </a>
         </nav>
+        <section id="blog" aria-labelledby="blog-heading" class="mt-8">
+            <h2 id="blog-heading" class="mb-4">Blog</h2>
+            <BlogList posts={posts.slice(0, 3)} />
+            <a href="/blog/" class="blog-link touch-target mt-4">
+                All posts →
+            </a>
+        </section>
         <section id="research" aria-labelledby="research-heading" class="mt-8">
             <h2 id="research-heading" class="mb-4">Research</h2>
             <ul class="space-y-4">
@@ -212,23 +208,4 @@ const contactLinks = [
                 Google Scholar →
             </a>
         </section>
-    </body>
-</html>
-
-<style>
-    .touch-target {
-        display: inline-flex;
-        align-items: center;
-    }
-
-    @media (any-pointer: coarse) {
-        .touch-target {
-            min-height: 44px;
-        }
-
-        .touch-target-wide {
-            min-width: 44px;
-            justify-content: center;
-        }
-    }
-</style>
+</SiteLayout>

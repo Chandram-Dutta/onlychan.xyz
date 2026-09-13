@@ -1,9 +1,38 @@
 @import "tailwindcss";
 
 @theme {
+    --color-zinc-850: #202023;
     --font-mono:
         "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
         "Liberation Mono", "Courier New", monospace;
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+.touch-target {
+    display: inline-flex;
+    align-items: center;
+}
+
+.blog-link {
+    color: var(--color-zinc-300);
+    text-decoration: underline;
+    text-decoration-color: var(--color-rose-400);
+    text-underline-offset: 4px;
+    transition: color 200ms ease-out;
+}
+
+.blog-link:is(:hover, :focus-visible) {
+    color: var(--color-rose-400);
+}
+
+@media (any-pointer: coarse) {
+    .touch-target {
+        min-height: 44px;
+    }
+
+    .touch-target-wide {
+        min-width: 44px;
+        justify-content: center;
+    }
+}

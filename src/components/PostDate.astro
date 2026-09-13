@@ -1,0 +1,15 @@
+---
+interface Props {
+    date: Date;
+}
+
+const { date } = Astro.props;
+const label = date.toLocaleDateString("en", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    timeZone: "UTC",
+});
+---
+
+<time datetime={date.toISOString().slice(0, 10)}>{label}</time>

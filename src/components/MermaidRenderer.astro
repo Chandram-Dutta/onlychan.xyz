@@ -1,0 +1,28 @@
+<script>
+  async function renderDiagrams() {
+    const nodes = Array.from(
+      document.querySelectorAll<HTMLElement>("pre.mermaid:not([data-processed])"),
+    );
+    if (!nodes.length) return;
+
+    const { default: mermaid } = await import("mermaid");
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: "dark",
+    });
+    await mermaid.run({ nodes });
+    // Keep labels readable on small screens; the focusable pre scrolls instead.
+    for (const node of nodes) {
+      const svg = node.querySelector("svg");
+      if (svg?.viewBox.baseVal.width) {
+        svg.style.minWidth = `${svg.viewBox.baseVal.width}px`;
+      }
+    }
+  }
+
+  renderDiagrams().catch(console.error);
+  document.addEventListener("astro:page-load", () => {
+    renderDiagrams().catch(console.error);
+  });
+</script>

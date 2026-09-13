@@ -1,0 +1,77 @@
+---
+title: "The Termination Circuit (how reasoning models stop thinking)."
+description: "Reasoning models since the dawn of o1 and R1 have a tendency to overthink. Despite a lot of work on early-exit methods and steering, open-weight and smaller reasoning models still produce long chains of thought before they answer. I worked on discovering how much of that thinking is required before the model already knows the answer and what makes the model stop thinking."
+pubDate: "2026-07-10"
+tags: ["interpretability", "chain-of-thought", "llms", "code"]
+---
+
+Reasoning models since the dawn of o1 and R1 have a tendency to overthink. Despite a lot of work on early-exit methods and steering, open-weight and smaller reasoning models still produce long chains of thought before they answer. I worked on discovering how much of that thinking is required before the model already knows the answer and what makes the model stop thinking.
+
+# Summary
+- Reasoning models keep thinking for a long time even after finding the answer.
+- In Qwen3-1.7B, the answer to most GSM8K problems the model solves is already settled about halfway through its CoT.
+- I traced the stopping decision (emission of the `</think>` token) to a small group of MLP layers near the end of the network, which I termed the termination circuit.
+- It implements a verification gate where the model stops thinking when it has written out an answer that matches the one it computed internally.
+- The gate has no simple steering handle. No single direction can reliably fire it early.
+
+> The paper is currently 'on-hold' on arXiv. I have made it available <a href="https://d3p2bvoe452d0z.cloudfront.net/The+Termination+Circuit.pdf" target="_blank" rel="noopener noreferrer">here</a> for the time being. The code for the experiments are available <a href="https://github.com/Chandram-Dutta/the-termination-circuit" target="_blank" rel="noopener noreferrer">here</a>.
+
+# Finding when the model already has the answer
+To find approximately where the model has answer to a question during its CoT, we can cut each trace at various points and close the thinking segment with a cue like, "The final answer is..." and force the model to answer. $S$ is defined as the earliest point in a model's CoT where the answer after the cue is correct and more importantly stays correct.
+
+![Sufficiency point S along a chain of thought](/images/termination_circuit_s.png)
+
+Sometimes in GSM8K, the model can know the answer without even thinking, to segregate this, we can pair each question with reasoning from a completely different problem. When the prefix is mismatched, forced accuracy collapses, showing that correct answers come from the model’s own reasoning.
+
+I found that at median, the answer is often computed at around 30% of its CoT. The remaining 70% is largely overthinking.
+
+So if a model already knows the answer long before it states it, why doesn't it stop?
+
+# So what decides when to stop?
+
+By decomposing the `</think>` logit at the moment of its emission, we can see that decision is extremely localized.
+- A single MLP Layer (layer 27 out of 28) contributes ~40% of the logit.
+- The top 8 components (mostly MLPs) account for 71%.
+- Attention heads contribute very little.
+
+Consequentially, the buildup to emitting `</think>` is not gradual. The stop margin stays deeply negative throughout the CoT, including past the point of sufficiency $S$. It jumps sharply in a single step when the model writes its final answer sentence.
+
+This small set of MLPs including the layers that feed them is what I would like to call *The Termination Circuit*.
+
+# It is a verification step and not a sufficiency detector.
+
+Attribution can only tell us where the logit comes from. To understand what the circuit is actually computing, we use causal interventions.
+
+I took each trace's own final answer sentence (eg: "So the final answer is `\boxed{723}`.") and spliced it into the middle of its thinking segment, after the sufficiency point $S$.
+
+When the spliced answer is the model's own correct answer, the circuit fires `</think>` as the greedy next token 94% of the traces. The exact same sentence but with a different number fires only 8% of the time. If the sentence its placed before $S$, it fires 16% of the time. A different problem's answer fires it 19% of the time and a random non answer fires it 0% of the time.
+
+Format alone is not enough. The right value at the wrong time is not enough. Both conditions must be true at once. An answer statement appears in context, and the stated value matches what the model has already computed internally.
+
+Additionally, ablating just the top 4 MLPs in this circuit (at sentence boundaries) made the model unable to stop. The reasoning stayed coherent (perplexity barely changed). Also, patching the trigger state from the real stopping point into an earlier boundary transferred the stopping decision in ~99% of cases.
+
+# The reason why steering doesn't work well.
+
+If the stopping decision was a simple scalar building up over the time, we should be able to steer it with a direction in the residual stream. I tested this extensively.
+
+No direction I could construct fired the gate from a normal mid-chain boundary. The best single direction recovered only about 20% of the effect you get from patching the full internal state. The gate can be tipped once it's already close to firing (e.g. right after an answer statement) and strong steering can even override the value check to some degree but it doesn't directly operate the mechanism.
+
+The signal that triggers stopping appears to be high-dimensional rather than a single adjustable dial.
+
+# Generalisation
+
+The same late-MLP verification gate (at roughly the same relative depth) replicates on Qwen3-8B, Magistral-Small-24B on MATH-500 too. The overthinking gap stays large across all of them.
+
+# Why overthinking happens?
+
+The termination circuit doesn't measure whether the reasoning is sufficient, it verifies one narrow condition, "Has the model just stated an answer, and does the stated value match what it computed?"
+
+Nothing in the model forces it to state its answer early. So even when the answer is already determined at $S$, the model keeps reasoning until it happens to write the answer down later. The gate then verifies it and stops.
+
+This explains why overthinking is so robust and why many existing interventions only give modest gains.
+
+# The takeaway.
+
+If we want reasoning models to stop earlier and waste less computation, the most direct lever is to get the model to state its candidate answer earlier. The circuit will then do the verification work it was built to do.
+
+Steering the internal state directly is difficult precisely because the gate is a high-dimensional pattern, not a simple direction.
