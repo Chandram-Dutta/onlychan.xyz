@@ -24,6 +24,27 @@ const projects = [
     },
 ];
 
+const publications = [
+    {
+        title: "CAN-DAQ: An open-source, cost-effective data capture device and software for automotive research",
+        href: "https://www.sciencedirect.com/science/article/pii/S2468067226000039",
+        venue: "HardwareX · Elsevier",
+        year: "2026",
+    },
+    {
+        title: "Device to Measure Respiratory Rate in Children, in Resource Poor Settings",
+        href: "https://link.springer.com/article/10.1007/s11220-024-00499-w",
+        venue: "Sensing and Imaging · Springer",
+        year: "2024",
+    },
+    {
+        title: "Programmable Wireless Adapter for Commercial Electric Drives and Multifunction Meters",
+        href: "https://ieeexplore.ieee.org/abstract/document/10434850",
+        venue: "Innovations in Power and Advanced Computing Technologies (i-PACT) · IEEE",
+        year: "2023",
+    },
+];
+
 const documentLinks = [
     {
         label: "Resume",
@@ -163,6 +184,34 @@ const contactLinks = [
                 More on GitHub →
             </a>
         </nav>
+        <section id="research" aria-labelledby="research-heading" class="mt-8">
+            <h2 id="research-heading" class="mb-4">Research</h2>
+            <ul class="space-y-4">
+                {publications.map((publication) => (
+                    <li>
+                        <a
+                            href={publication.href}
+                            class="touch-target text-zinc-300 underline decoration-violet-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-violet-400 focus-visible:text-violet-400"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {publication.title}
+                        </a>
+                        <p class="text-sm text-zinc-400">
+                            {publication.venue} · <time datetime={publication.year}>{publication.year}</time>
+                        </p>
+                    </li>
+                ))}
+            </ul>
+            <a
+                href="https://links.onlychan.xyz/gscholar"
+                class="touch-target mt-4 text-zinc-300 underline decoration-violet-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-violet-400 focus-visible:text-violet-400"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Google Scholar →
+            </a>
+        </section>
     </body>
 </html>
 
