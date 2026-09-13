@@ -1,5 +1,39 @@
 ---
 import "../styles/global.css";
+
+const documentLinks = [
+    {
+        label: "Resume",
+        href: "https://links.onlychan.xyz/resume",
+        external: true,
+    },
+    { label: "CV", href: "https://links.onlychan.xyz/cv", external: true },
+];
+
+const contactLinks = [
+    { label: "Mail", href: "mailto:chandramdutta2004@gmail.com" },
+    { label: "X", href: "https://links.onlychan.xyz/x", external: true },
+    {
+        label: "GitHub",
+        href: "https://links.onlychan.xyz/github",
+        external: true,
+    },
+    {
+        label: "LinkedIn",
+        href: "https://links.onlychan.xyz/linkedin",
+        external: true,
+    },
+    {
+        label: "Instagram",
+        href: "https://links.onlychan.xyz/instagram",
+        external: true,
+    },
+    {
+        label: "Google Scholar",
+        href: "https://links.onlychan.xyz/gscholar",
+        external: true,
+    },
+];
 ---
 
 <html lang="en" class="dark scheme-dark bg-zinc-850 font-mono text-zinc-100">
@@ -19,12 +53,12 @@ import "../styles/global.css";
     </head>
     <body class="min-h-screen p-4 sm:p-6 lg:p-8">
         <h1 class="text-2xl mb-8">Chandram Dutta</h1>
-        <p>
+        <p class="mb-4">
             Software Engineer at{" "}
             <a
                 href="https://adora-app.com/"
                 target="_blank"
-                class="text-emerald-400"
+                class="text-zinc-300 underline decoration-emerald-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-emerald-400"
             >
                 Adora
             </a>
@@ -32,15 +66,53 @@ import "../styles/global.css";
             <a
                 href="https://developer.apple.com/swift-student-challenge/"
                 target="_blank"
-                class="text-orange-400"
+                class="text-zinc-300 underline decoration-orange-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-orange-400"
             >
                 Swift Student Challenge Winner
             </a>
             . Graduated from{" "}
-            <a href="https://vit.ac.in/" target="_blank" class="text-blue-400">
+            <a
+                href="https://vit.ac.in/"
+                target="_blank"
+                class="text-zinc-300 underline decoration-blue-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-blue-400"
+            >
                 VIT Vellore
             </a>{" "}
             majoring in Electrical and Electronics Engineering.
         </p>
+        <nav aria-label="Contact and social links">
+            {contactLinks.map((link, index) => (
+                <>
+                    <a
+                        href={link.href}
+                        class="text-zinc-300 underline decoration-fuchsia-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-fuchsia-400"
+                        target={link.external ? "_blank" : undefined}
+                        rel={link.external ? "noopener noreferrer" : undefined}
+                    >
+                        {link.label}
+                    </a>
+                    {index < contactLinks.length - 1 && (
+                        <span aria-hidden="true"> • </span>
+                    )}
+                </>
+            ))}
+        </nav>
+        <nav aria-label="Documents" class="mt-4">
+            {documentLinks.map((link, index) => (
+                <>
+                    <a
+                        href={link.href}
+                        class="text-zinc-300 underline decoration-cyan-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-cyan-400"
+                        target={link.external ? "_blank" : undefined}
+                        rel={link.external ? "noopener noreferrer" : undefined}
+                    >
+                        {link.label}
+                    </a>
+                    {index < documentLinks.length - 1 && (
+                        <span aria-hidden="true"> • </span>
+                    )}
+                </>
+            ))}
+        </nav>
     </body>
 </html>
