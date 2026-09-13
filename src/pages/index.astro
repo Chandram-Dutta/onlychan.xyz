@@ -1,6 +1,29 @@
 ---
 import "../styles/global.css";
 
+const projects = [
+    {
+        label: "Hyena Dart",
+        href: "https://hyenadart.onlychan.xyz",
+        description: "A Flutter and Dart analyzer for dead code and code complexity.",
+    },
+    {
+        label: "Iris",
+        href: "https://github.com/Chandram-Dutta/Iris",
+        description: "A minimal 2D game engine in Swift.",
+    },
+    {
+        label: "Flutter Icon Browser",
+        href: "https://github.com/Chandram-Dutta/flutter_icon_browser",
+        description: "Search icons across five libraries in one place.",
+    },
+    {
+        label: "Step",
+        href: "https://github.com/Chandram-Dutta/step",
+        description: "My 2024 Swift Student Challenge winning submission.",
+    },
+];
+
 const documentLinks = [
     {
         label: "Resume",
@@ -53,12 +76,12 @@ const contactLinks = [
     </head>
     <body class="mx-auto min-h-screen max-w-3xl p-4 sm:p-6 lg:p-8 lg:pt-24">
         <h1 class="text-2xl mb-8">Chandram Dutta</h1>
-        <p class="mb-4">
+        <p class="mb-8">
             Software Engineer at{" "}
             <a
                 href="https://adora-app.com/"
                 target="_blank"
-                class="text-zinc-300 underline decoration-emerald-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-emerald-400"
+                class="touch-target text-zinc-300 underline decoration-emerald-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-emerald-400"
             >
                 Adora
             </a>
@@ -66,7 +89,7 @@ const contactLinks = [
             <a
                 href="https://developer.apple.com/swift-student-challenge/"
                 target="_blank"
-                class="text-zinc-300 underline decoration-orange-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-orange-400"
+                class="touch-target text-zinc-300 underline decoration-orange-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-orange-400"
             >
                 Swift Student Challenge Winner
             </a>
@@ -74,7 +97,7 @@ const contactLinks = [
             <a
                 href="https://vit.ac.in/"
                 target="_blank"
-                class="text-zinc-300 underline decoration-blue-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-blue-400"
+                class="touch-target text-zinc-300 underline decoration-blue-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-blue-400"
             >
                 VIT Vellore
             </a>{" "}
@@ -85,7 +108,7 @@ const contactLinks = [
                 <>
                     <a
                         href={link.href}
-                        class="text-zinc-300 underline decoration-fuchsia-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-fuchsia-400"
+                        class="touch-target touch-target-wide text-zinc-300 underline decoration-fuchsia-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-fuchsia-400"
                         target={link.external ? "_blank" : undefined}
                         rel={link.external ? "noopener noreferrer" : undefined}
                     >
@@ -102,7 +125,7 @@ const contactLinks = [
                 <>
                     <a
                         href={link.href}
-                        class="text-zinc-300 underline decoration-cyan-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-cyan-400"
+                        class="touch-target touch-target-wide text-zinc-300 underline decoration-cyan-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-cyan-400"
                         target={link.external ? "_blank" : undefined}
                         rel={link.external ? "noopener noreferrer" : undefined}
                     >
@@ -114,5 +137,49 @@ const contactLinks = [
                 </>
             ))}
         </nav>
+        <nav aria-label="Projects" class="mt-8">
+            <h2 class="mb-4">I have made some cool side projects over the years:</h2>
+            <ul class="space-y-3">
+                {projects.map((project) => (
+                    <li>
+                        <a
+                            href={project.href}
+                            class="touch-target text-zinc-300 underline decoration-amber-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-amber-400 focus-visible:text-amber-400"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {project.label}
+                        </a>
+                        <p class="text-sm text-zinc-400">{project.description}</p>
+                    </li>
+                ))}
+            </ul>
+            <a
+                href="https://github.com/Chandram-Dutta?tab=repositories"
+                class="touch-target mt-4 text-zinc-300 underline decoration-amber-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-amber-400 focus-visible:text-amber-400"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                More on GitHub →
+            </a>
+        </nav>
     </body>
 </html>
+
+<style>
+    .touch-target {
+        display: inline-flex;
+        align-items: center;
+    }
+
+    @media (any-pointer: coarse) {
+        .touch-target {
+            min-height: 44px;
+        }
+
+        .touch-target-wide {
+            min-width: 44px;
+            justify-content: center;
+        }
+    }
+</style>
