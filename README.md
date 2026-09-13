@@ -48,3 +48,11 @@ Add Markdown or MDX posts to `src/content/blogs/` with `title`, `description`,
 and reference them as `/images/filename.png`.
 
 Posts appear at `/blog/`, newest first. The homepage shows the latest three.
+
+## Link previews
+
+Every page includes Open Graph and Twitter card metadata. Blog posts use their
+frontmatter title, description, and publication date, with a 1200×630 PNG title
+card generated at `/og/blog/<post-id>.png` during each build. No external image
+service or manual image creation is needed for new posts. The bundled JetBrains
+Mono font is distributed under the license in `src/assets/fonts/OFL.txt`.

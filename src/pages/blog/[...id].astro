@@ -23,7 +23,14 @@ const { post } = Astro.props;
 const { Content } = await render(post);
 ---
 
-<SiteLayout title={`${post.data.title} · onlychan`} description={post.data.description}>
+<SiteLayout
+    title={`${post.data.title} · onlychan`}
+    socialTitle={post.data.title}
+    description={post.data.description}
+    image={`/og/blog/${post.id}.png`}
+    type="article"
+    publishedTime={post.data.pubDate}
+>
     <nav aria-label="Breadcrumb" class="mb-8">
         <a href="/blog/" class="blog-link touch-target">← All posts</a>
         <span aria-hidden="true" class="mx-3 text-zinc-600">/</span>
