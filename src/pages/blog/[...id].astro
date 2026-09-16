@@ -3,6 +3,7 @@ import type { CollectionEntry } from "astro:content";
 import { render } from "astro:content";
 import MermaidRenderer from "../../components/MermaidRenderer.astro";
 import PostDate from "../../components/PostDate.astro";
+import TableOfContents from "../../components/TableOfContents.astro";
 import SiteLayout from "../../layouts/SiteLayout.astro";
 import { getBlogPosts } from "../../lib/blog";
 import "../../styles/blog.css";
@@ -20,7 +21,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 ---
 
 <SiteLayout
@@ -32,17 +33,27 @@ const { Content } = await render(post);
     publishedTime={post.data.pubDate}
 >
     <nav aria-label="Breadcrumb" class="mb-8">
-        <a href="/blog/" class="blog-link touch-target">← All posts</a>
-        <span aria-hidden="true" class="mx-3 text-zinc-600">/</span>
-        <a href="/" class="blog-link touch-target">Home</a>
+        <a href="/blog/" class="blog-link touch-target">
+            ← All posts
+        </a>
+        <span aria-hidden="true" class="mx-3 text-zinc-600">
+            /
+        </span>
+        <a href="/" class="blog-link touch-target">
+            Home
+        </a>
     </nav>
     <article>
         <header class="mb-10 border-b border-zinc-700 pb-8">
             <p class="mb-3 text-sm text-zinc-400">
                 <PostDate date={post.data.pubDate} />
             </p>
-            <h1 class="mb-4 text-2xl leading-snug sm:text-3xl">{post.data.title}</h1>
-            <p class="text-sm leading-relaxed text-zinc-400">{post.data.description}</p>
+            <h1 class="mb-4 text-2xl leading-snug sm:text-3xl">
+                {post.data.title}
+            </h1>
+            <p class="text-sm leading-relaxed text-zinc-400">
+                {post.data.description}
+            </p>
             {post.data.tags.length > 0 && (
                 <ul aria-label="Tags" class="mt-4 flex flex-wrap gap-2">
                     {post.data.tags.map((tag) => (
@@ -53,12 +64,15 @@ const { Content } = await render(post);
                 </ul>
             )}
         </header>
+        <TableOfContents headings={headings} />
         <div class="blog-content">
             <Content />
         </div>
     </article>
     <footer class="mt-12 border-t border-zinc-700 pt-6">
-        <a href="/blog/" class="blog-link touch-target">← All posts</a>
+        <a href="/blog/" class="blog-link touch-target">
+            ← All posts
+        </a>
     </footer>
     <MermaidRenderer />
 </SiteLayout>
