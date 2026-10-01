@@ -1,0 +1,63 @@
+---
+title: "Introducing Agentflare"
+description: "A cloud space for building with agents"
+pubDate: 2026-9-16
+tags: ["agentflare", "agents", "llms", "cloudflare", "d1", "r1"]
+---
+
+# What is Agentflare?
+
+I absolutely believe that agents deserve their own machines. I love <a href="https://ampcode.com/docs" target="_blank" rel="noopener noreferrer">Amp Orbs</a>, and I use them for all my personal projects. If you don't know about Orbs, they're cloud machines where your agent harness runs. They have a lot of advantages, like:
+
+- If you have a potato machine (I'm rocking a base 8 GB MacBook Air M2), you can offload big, heavy codebases to the cloud.
+- You can control and interact with agents from literally anywhere without worrying about your machine going to sleep.
+- No weird global config changes when running agents in "bypass ~destructive~ mode".
+- My favorite: you don't have to worry about bloated dependencies eating up your storage (yeah, the base M2 MacBook Air comes with just 256 GB).
+
+If I thought about it longer, I could come up with a few more, but I won't bore you with them. Of course, there are some disadvantages too:
+
+- You might not own the hardware, so you never know where your code might be going (although I trust <a href="https://ampcode.com/" target="_blank" rel="noopener noreferrer">Amp</a> with my life. Not <a href="https://techcrunch.com/2026/07/20/anthropics-landmark-1-5b-copyright-settlement-is-approved/" target="_blank" rel="noopener noreferrer">Dario</a> or <a href="https://www.reuters.com/technology/openai-ceo-sam-altman-step-down-2023-11-17/" target="_blank" rel="noopener noreferrer">Sam</a>, though).
+- App development (especially iOS) which is my main job, can be a pain because Mac server farms are hard to come by.
+- There's the extra expense (<a href="https://ampcode.com/" target="_blank" rel="noopener noreferrer">Amp</a> is cheap tho, $20 gets me through the month, ngl).
+- You can't always bring your own agents and subscription (though <a href="https://ampcode.com/" target="_blank" rel="noopener noreferrer">Amp</a> supports this!).
+- There aren't many open-source solutions (I haven't researched this much, so I could be wrong).
+- I don't like how <a href="https://ampcode.com/" target="_blank" rel="noopener noreferrer">Amp</a> merges code back upstream. It's great when you're working solo, but not so much when you're on a team that doesn't use Amp.
+- I hate worktrees, both local and cloud-based.
+
+So I built Agentflare to address these issues (and because I'm trying out Cloudflare's stack, hence the poorly chosen name)!
+
+I'd describe Agentflare as ephemeral sandboxes where agents can work and then create <a href="https://docs.github.com/en/pull-requests/get-started/about-pull-requests" target="_blank" rel="noopener noreferrer">PRs</a> for you to review and merge.
+
+# How does it work?
+
+You sign in and connect the Agentflare app to your GitHub repository, which creates a project. Then you connect your <a href="https://help.openai.com/en/articles/11369540-using-codex-with-your-chatgpt-plan" target="_blank" rel="noopener noreferrer">Codex subscription</a> to Agentflare. After that, you can create threads, each with its own Codex thread and machine. Once the agent makes a change, you can create a <a href="https://docs.github.com/en/pull-requests/get-started/about-pull-requests" target="_blank" rel="noopener noreferrer">PR</a> to review and merge.
+
+You can work on multiple threads and projects simultaneously, and review code changes directly in Agentflare or on <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>.
+
+For now, only <a href="https://github.com/openai/codex" target="_blank" rel="noopener noreferrer">Codex</a> is supported through the <a href="https://agentclientprotocol.com/" target="_blank" rel="noopener noreferrer">Agent Client Protocol (ACP)</a> (God bless <a href="https://zed.dev/acp" target="_blank" rel="noopener noreferrer">Zed</a> and <a href="https://www.jetbrains.com/acp/" target="_blank" rel="noopener noreferrer">JetBrains</a>!). I plan to add support for more agents once I sort out the quirks.
+
+It's open source at <a href="https://github.com/Chandram-Dutta/agentflare" target="_blank" rel="noopener noreferrer">GitHub</a> and can be deployed to your Cloudflare account with <a href="https://developers.cloudflare.com/workers/platform/pricing/" target="_blank" rel="noopener noreferrer">Workers Paid</a> (sandboxes require this; it costs $5 and comes with honestly generous usage limits).
+
+# Architecture
+
+The entire stack is built on Cloudflare (not sponsored, but I hope they would).
+
+<a href="https://developers.cloudflare.com/workers/" target="_blank" rel="noopener noreferrer">Cloudflare Workers</a> serve the application and API, <a href="https://developers.cloudflare.com/d1/" target="_blank" rel="noopener noreferrer">D1</a> stores accounts, projects, and thread records, and a <a href="https://developers.cloudflare.com/durable-objects/" target="_blank" rel="noopener noreferrer">Durable Object</a> coordinates each user’s runtime.
+
+When you start a workspace, Agentflare provisions a <a href="https://developers.cloudflare.com/sandbox/" target="_blank" rel="noopener noreferrer">Cloudflare Sandbox</a> running Codex and checks out the repository from <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>. Each user shares one sandbox across their threads, with a separate checkout and conversation for each thread. This also means you sign into Codex once and use that login across projects.
+
+Sandbox disks are ephemeral, so <a href="https://developers.cloudflare.com/r2/" target="_blank" rel="noopener noreferrer">R2</a> stores conversation snapshots and workspace archives. Conversations can save during a turn; full workspace checkpoints wait until the user’s threads are idle and the workspace is no longer actively being accessed. A replacement sandbox restores the latest successful checkpoint so you can continue later.
+
+This is checkpoint recovery, not process recovery: files, Git state, and saved agent sessions can return, but running dev servers and process memory don’t. Closing the browser doesn’t delete your work, although a sudden failure can lose changes made since the last checkpoint.
+
+# Future?
+
+I will be using Agentflare for my own personal work. I intend to add more <a href="https://agentclientprotocol.com/" target="_blank" rel="noopener noreferrer">ACP</a>-supported agents alongside support for features provided by ACP. Honestly, would love contributions!
+
+I am deploying a production version on <a href="https://agentflare.onlychan.xyz" target="_blank" rel="noopener noreferrer">agentflare.onlychan.xyz</a> with a limit of 2 projects and 2 threads per project per user (I hope that doesn't hit my Cloudflare limits or I would have to stop).
+
+I think Cloudflare is ideal for these types of applications. I just found out about <a href="https://www.cloudflare.com/products/artifacts/" target="_blank" rel="noopener noreferrer">Artifacts</a> (their Git hosting solution) and might integrate it into the platform. Also there's a artifact hackathon so looking forward to the projects people are building with it (I don't have the time to participate myself unfortunately and I am so done with hackathons. I just finished my uni lol).
+
+Also if anyone from Cloudflare is reading this, would love to hear your thoughts and feedback on the platform (and maybe pay the bills 😭). And happy birthday week!
+
+Also if you don't care about open source solutions and are looking for a serious alternative, <a href="https://ampcode.com/" target="_blank" rel="noopener noreferrer">Amp</a> is the absolute best harness and environment!

@@ -114,6 +114,7 @@
     border: 1px solid var(--color-zinc-700);
     padding: 0.65rem 0.85rem;
     text-align: left;
+    overflow-wrap: break-word;
 }
 
 .blog-content th {
