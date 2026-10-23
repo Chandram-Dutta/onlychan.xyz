@@ -1,8 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-    <title>onlychan — oc</title>
-    <rect width="64" height="64" rx="14" fill="#18181b" />
-    <g fill="none" stroke="#f4f4f5" stroke-width="5" stroke-linecap="round">
-        <rect x="11" y="22" width="17" height="22" rx="8.5" />
-        <path d="M52 25a9 9 0 0 0-16 6v4a9 9 0 0 0 16 6" />
-    </g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><title>onlychan — oc</title><rect width="64" height="64" fill="#18181b" rx="14"/><g fill="none" stroke="#f4f4f5" stroke-linecap="round" stroke-width="5"><rect width="17" height="22" x="11" y="22" rx="8.5"/><path d="M52 25a9 9 0 0 0-16 6v4a9 9 0 0 0 16 6"/></g></svg>
