@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <!-- Portfolio artwork for sochi, which has no published project icon. -->
-  <rect width="192" height="192" rx="42" fill="#133d42"/>
-  <rect x="32" y="43" width="128" height="106" rx="13" fill="#102b30" stroke="#4b8c91" stroke-width="3"/>
-  <path d="M33 69h126" stroke="#4b8c91" stroke-width="3"/>
-  <g fill="#7eb7bc"><circle cx="47" cy="56" r="3"/><circle cx="59" cy="56" r="3"/><circle cx="71" cy="56" r="3"/></g>
-  <path d="m54 91 20 16-20 16m35 0h28" fill="none" stroke="#a5ece3" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>
