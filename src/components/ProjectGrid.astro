@@ -1,0 +1,95 @@
+---
+// Artwork comes from each project's public repository. Iris uses an original
+// portfolio illustration because its repository does not publish a project icon.
+const projects = [
+    {
+        label: "Iguana",
+        href: "https://iguana.onlychan.xyz/",
+        icon: "iguana.webp",
+        description: "Keyboard-first window tiling for macOS.",
+    },
+    {
+        label: "Dream",
+        href: "https://dream.onlychan.xyz/",
+        icon: "dream.webp",
+        description: "Turn a prompt into a useful, interactive page.",
+    },
+    {
+        label: "ve.",
+        href: "https://ve.onlychan.xyz/",
+        icon: "ve.svg",
+        description: "Multitrack video editing for iPhone and iPad.",
+    },
+    {
+        label: "Hyena Dart",
+        href: "https://hyenadart.onlychan.xyz/",
+        icon: "hyena-dart.webp",
+        description: "Find dead code and complexity in Dart and Flutter.",
+    },
+    {
+        label: "Iris",
+        href: "https://github.com/Chandram-Dutta/Iris",
+        icon: "iris.svg",
+        description: "A minimal 2D game engine in Swift.",
+    },
+    {
+        label: "Flutter Icon Browser",
+        href: "https://github.com/Chandram-Dutta/flutter_icon_browser",
+        icon: "flutter-icon-browser.webp",
+        description: "Five icon libraries. One place to search.",
+    },
+    {
+        label: "Step",
+        href: "https://github.com/Chandram-Dutta/step",
+        icon: "step.webp",
+        description: "My 2024 Swift Student Challenge winner.",
+    },
+];
+---
+
+<nav aria-labelledby="projects-heading" class="mt-10">
+    <div class="mb-5 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+        <h2 id="projects-heading">Projects</h2>
+        <a
+            href="https://github.com/Chandram-Dutta?tab=repositories"
+            class="touch-target text-xs text-zinc-400 underline decoration-zinc-600 underline-offset-4 transition-colors hover:text-amber-400 focus-visible:text-amber-400"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            More on GitHub <span aria-hidden="true">↗</span>
+            <span class="sr-only">(opens in a new tab)</span>
+        </a>
+    </div>
+    <ul class="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
+        {projects.map((project, index) => (
+            <li class="min-w-0">
+                <a
+                    href={project.href}
+                    aria-labelledby={`project-${index}-name`}
+                    aria-describedby={`project-${index}-description`}
+                    class="project-card group relative flex h-full flex-col items-center rounded-2xl border border-zinc-700/40 bg-zinc-800/30 px-3 py-5 text-center transition-colors duration-200 hover:border-zinc-600 hover:bg-zinc-800/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-amber-400"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <span aria-hidden="true" class="absolute right-3 top-2 text-xs text-zinc-500 transition-colors group-hover:text-amber-400 group-focus-visible:text-amber-400">↗</span>
+                    <img
+                        src={`/projects/${project.icon}`}
+                        alt=""
+                        width="64"
+                        height="64"
+                        loading="lazy"
+                        decoding="async"
+                        class="mb-4 size-16 rounded-[15px] object-contain shadow-md"
+                    />
+                    <span id={`project-${index}-name`} class="text-sm leading-5 text-zinc-200 transition-colors group-hover:text-amber-400 group-focus-visible:text-amber-400">
+                        {project.label}
+                        <span class="sr-only">(opens in a new tab)</span>
+                    </span>
+                    <span id={`project-${index}-description`} class="mt-2 text-xs leading-5 text-zinc-400">
+                        {project.description}
+                    </span>
+                </a>
+            </li>
+        ))}
+    </ul>
+</nav>

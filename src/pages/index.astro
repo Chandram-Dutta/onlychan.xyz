@@ -1,37 +1,10 @@
 ---
 import BlogList from "../components/BlogList.astro";
+import ProjectGrid from "../components/ProjectGrid.astro";
 import SiteLayout from "../layouts/SiteLayout.astro";
 import { getBlogPosts } from "../lib/blog";
 
 const posts = await getBlogPosts();
-
-const projects = [
-    {
-        label: "ve.",
-        href: "https://ve.onlychan.xyz/",
-        description: "A multitrack video editor for iPhone and iPad.",
-    },
-    {
-        label: "Hyena Dart",
-        href: "https://hyenadart.onlychan.xyz",
-        description: "A Flutter and Dart analyzer for dead code and code complexity.",
-    },
-    {
-        label: "Iris",
-        href: "https://github.com/Chandram-Dutta/Iris",
-        description: "A minimal 2D game engine in Swift.",
-    },
-    {
-        label: "Flutter Icon Browser",
-        href: "https://github.com/Chandram-Dutta/flutter_icon_browser",
-        description: "Search icons across five libraries in one place.",
-    },
-    {
-        label: "Step",
-        href: "https://github.com/Chandram-Dutta/step",
-        description: "My 2024 Swift Student Challenge winning submission.",
-    },
-];
 
 const publications = [
     {
@@ -152,32 +125,7 @@ const contactLinks = [
                 </>
             ))}
         </nav>
-        <nav aria-label="Projects" class="mt-8">
-            <h2 class="mb-4">I have made some cool side projects over the years:</h2>
-            <ul class="space-y-3">
-                {projects.map((project) => (
-                    <li>
-                        <a
-                            href={project.href}
-                            class="touch-target text-zinc-300 underline decoration-amber-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-amber-400 focus-visible:text-amber-400"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            {project.label}
-                        </a>
-                        <p class="text-sm text-zinc-400">{project.description}</p>
-                    </li>
-                ))}
-            </ul>
-            <a
-                href="https://github.com/Chandram-Dutta?tab=repositories"
-                class="touch-target mt-4 text-zinc-300 underline decoration-amber-400 underline-offset-4 transition-colors duration-200 ease-out hover:text-amber-400 focus-visible:text-amber-400"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                More on GitHub →
-            </a>
-        </nav>
+        <ProjectGrid />
         <section id="blog" aria-labelledby="blog-heading" class="mt-8">
             <h2 id="blog-heading" class="mb-4">Blog</h2>
             <BlogList posts={posts.slice(0, 3)} />
