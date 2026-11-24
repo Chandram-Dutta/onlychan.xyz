@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
+  <!-- Portfolio artwork for Iris, inspired by its Space Shooter example. -->
+  <rect width="192" height="192" rx="42" fill="#30264f"/>
+  <g fill="#a99acb">
+    <path d="M36 36h6v6h-6zm106 12h6v6h-6zM48 132h6v6h-6zm96 6h6v6h-6z"/>
+  </g>
+  <path fill="#d8c4ff" d="M88 50h16v22h16v24h16v36h-24v-16H80v16H56V96h16V72h16z"/>
+  <path fill="#8c6fce" d="M88 84h16v24H88z"/>
+  <path fill="#f1a36c" d="M88 126h16v22H88z"/>
+</svg>
