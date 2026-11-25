@@ -1,0 +1,109 @@
+---
+title: "Finding the 12th Term of OEIS A198683"
+description: "How many distinct numbers can you make by parenthesizing 12 copies of i^i^...^i? A short explanation of how we squeezed the answer to 2926."
+pubDate: "2026-11-25"
+tags: ["math", "oeis", "python"]
+---
+
+Take $n$ copies of the imaginary unit $i = \sqrt{-1}$, put `^` between them, and add parentheses in every possible way. How many **different** numbers do you get?
+
+That is [OEIS A198683](https://oeis.org/A198683).
+
+With 3 copies of $i$, there are two ways to parenthesize:
+
+- $(i^i)^i = -i$
+- $i^{(i^i)} \approx 0.947 + 0.321i$
+
+Different values, so $a(3) = 2$. With 4 copies there are 5 parenthesizations, but two pairs collide, leaving $a(4) = 3$.
+
+For years, the OEIS stopped at $a(11) = 1152$, with a note saying $a(12)$ was _"either 2919 or 2926"_, unconfirmed. Using Python, ball arithmetic, and exact algebra, we settled it—and **2926 is now published in [OEIS A198683](https://oeis.org/A198683)**:
+
+$$a(12) = 2926$$
+
+| $n$                        |   1 |   2 |   3 |   4 |   5 |   6 |   7 |   8 |     9 |    10 |     11 |        12 |
+| -------------------------- | --: | --: | --: | --: | --: | --: | --: | --: | ----: | ----: | -----: | --------: |
+| **Bracketings**            |   1 |   1 |   2 |   5 |  14 |  42 | 132 | 429 | 1,430 | 4,862 | 16,796 |    58,786 |
+| **Distinct values $a(n)$** |   1 |   1 |   2 |   3 |   7 |  15 |  34 |  77 |   187 |   462 |  1,152 | **2,926** |
+
+The code and the full tables are on [GitHub](https://github.com/Chandram-Dutta/a198683).
+
+---
+
+## Why $n = 12$ got stuck
+
+Power towers of $i$ explode—and collapse—faster than ordinary computer arithmetic can handle.
+
+- **Too big:** At $n = 10$, one bracketing reaches about $10^{34}$. Raising $i$ to that gives a number around $e^{10^{35}}$. Raising $i$ to _that_ at $n = 12$ blows past every floating-point format on earth.
+- **Too close to 1:** Another $n = 12$ bracketing sits within $10^{-2487}$ of $1$ without actually being $1$. Standard floats round it straight to $1$ and undercount.
+
+In 2017, Jon E. Schoenfield mapped out every bracketing through $n = 11$, but hit a wall at $n = 12$: 27 bracketings overflowed, 2 underflowed to zero, and rounding error couldn't be ruled out.
+
+---
+
+## The idea: squeeze the answer from both sides
+
+If you just approximate numbers with floats, you can never be _sure_ two expressions are truly equal—maybe they just match to 500 digits. And proving two messy expressions are _different_ with pure algebra is notoriously hard.
+
+So we split the job in two, using a single trick first:
+
+### 1. Store logarithms instead of raw numbers
+
+Instead of storing a value $z$, we store its principal logarithm $L = \operatorname{Log}(z)$ (with angle in $(-\pi, \pi]$). Two numbers are equal if and only if their principal logarithms are equal, and computing $a^b$ becomes:
+
+$$L(a^b) = \text{reduce}\!\left(e^{L(b)} \cdot L(a)\right)$$
+
+where `reduce` subtracts whole multiples of $2\pi i$ to keep the angle in $(-\pi, \pi]$.
+
+A monstrous number of size $e^{10^{35}}$ now has a logarithm of size $10^{35}$—easy for a computer to store.
+
+### 2. Lower bound: prove numbers are different
+
+We compute every logarithm with [Arb](https://arblib.org) at 3,000 bits of precision. Instead of a single guess, Arb wraps each number in a **ball** (a center plus a guaranteed error radius).
+
+If two balls don't touch, the two numbers are **provably different**. Counting non-overlapping groups gives a rigorous **lower bound** on $a(n)$.
+
+### 3. Upper bound: prove numbers are equal
+
+Alongside each ball, we keep an exact symbolic expression for $L$ using exact algebraic rewrite rules (no rounding at all).
+
+If two bracketings simplify to the exact same symbolic form, they are **provably equal**. Counting distinct forms gives a rigorous **upper bound** on $a(n)$.
+
+When we run this for $n = 12$:
+
+- **Lower bound:** 2926
+- **Upper bound:** 2926
+
+Both sides meet, pinning down $a(12) = 2926$ in about two seconds.
+
+---
+
+## The catch at $n = 12$ (and why $n = 13$ stops here)
+
+Six bracketings at $n = 12$ produce a number so extreme—$\log|z| \approx -3.22 \times 10^{4.12 \times 10^{34}}$—that computing its angle would take roughly $10^{35}$ bits of precision. That is physically impossible.
+
+Luckily, we don't need its angle for $n = 12$:
+
+1. All six bracketings have provably identical inputs, so they definitely produce **one** value.
+2. Its size alone separates it from the other 2,925 values (the next smallest $\log|z|$ is only around $-3.62 \times 10^9$).
+
+At $n = 13$, though, that mystery-angle number gets plugged into new powers where its angle _does_ matter. That is where this method hits a wall.
+
+---
+
+## Checks—and how to refute it
+
+Running `uv run a198683 verify` runs five sanity checks:
+
+1. Matches Schoenfield's published tables for all 23,714 bracketings through $n = 11$, line for line.
+2. Brute-forces all 58,786 bracketings at $n = 12$ individually—still 2,926 disjoint groups.
+3. Reproduces the exact 2017 overflows and underflows (and resolves all of them).
+4. Confirms no resolved value ever lands on the $-\pi$ branch cut.
+5. Recounts $a(12) = 2926$ independently using `mpmath` at 3,000 digits, with no balls and no algebra.
+
+Want to try it—or prove it wrong? Clone the [repo](https://github.com/Chandram-Dutta/a198683); the full 58,786-line table is in [`tables/a198683_n12.txt`](https://github.com/Chandram-Dutta/a198683/blob/main/tables/a198683_n12.txt). **A single wrong line refutes the result.**
+
+```bash
+uv sync
+uv run a198683 count   # ~2 seconds
+uv run a198683 verify  # ~90 seconds
+```
